@@ -11,4 +11,7 @@ class AppColors {
 
   static const primaryColor = Color(0xff53B175);
   static const darkGrey = Color(0xff7C7C7C);
+  static const Color lightGrey = Color(0xffebecee);
+  static const secondaryColor = Color.fromARGB(214, 255, 174, 0);
+  static const scaffoldBackgroundColor = Colors.white;
 }

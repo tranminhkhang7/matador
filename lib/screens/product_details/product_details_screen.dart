@@ -22,6 +22,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Product Details')),
       body: SafeArea(
         child: Column(
           children: [

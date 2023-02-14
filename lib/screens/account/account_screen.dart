@@ -10,47 +10,50 @@ import 'account_item.dart';
 class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              ListTile(
-                leading:
-                    SizedBox(width: 65, height: 65, child: getImageHeader()),
-                title: AppText(
-                  text: "Mohammed Hashim",
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
                 ),
-                subtitle: AppText(
-                  text: "github.com/mohammedhashim44",
-                  color: Color(0xff7C7C7C),
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16,
-                ),
-              ),
-              Column(
-                children: getChildrenWithSeperator(
-                  widgets: accountItems.map((e) {
-                    return getAccountItemWidget(e);
-                  }).toList(),
-                  seperator: Divider(
-                    thickness: 1,
+                ListTile(
+                  leading:
+                      SizedBox(width: 65, height: 65, child: getImageHeader()),
+                  title: AppText(
+                    text: "Mohammed Hashim",
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  subtitle: AppText(
+                    text: "github.com/mohammedhashim44",
+                    color: Color(0xff7C7C7C),
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              logoutButton(),
-              SizedBox(
-                height: 20,
-              )
-            ],
+                Column(
+                  children: getChildrenWithSeperator(
+                    widgets: accountItems.map((e) {
+                      return getAccountItemWidget(e);
+                    }).toList(),
+                    seperator: Divider(
+                      thickness: 1,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                logoutButton(),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            ),
           ),
         ),
       ),
