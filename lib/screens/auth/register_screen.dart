@@ -149,14 +149,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       AppTextField(
                         isObscure: true,
                         controller: _passwordController,
-                        hintText: "Nhập Mật khẩu",
+                        hintText: "Nhập Mật Khẩu",
                         prefixIcons: const Icon(Icons.key),
                       ),
                       const SizedBox(
-                        height: 35,
+                        height: 50,
                       ),
                       AppButton(
                         label: "Đăng ký",
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                       ),
                       const SizedBox(
                         height: 20,

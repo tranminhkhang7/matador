@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_app/auth/login_screen.dart';
-import 'package:grocery_app/auth/register_screen.dart';
+import 'package:grocery_app/screens/auth/login_screen.dart';
+import 'package:grocery_app/screens/auth/register_screen.dart';
 import 'package:grocery_app/screens/account/account_screen.dart';
 import 'package:grocery_app/styles/colors.dart';
 

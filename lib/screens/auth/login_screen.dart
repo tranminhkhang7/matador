@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/common_widgets/app_textfield.dart';
@@ -75,11 +77,11 @@ class _LoginViewState extends State<LoginView> {
         color: AppColors.primaryColor,
         child: ModalProgressHUD(
           inAsyncCall: _isLoading,
-          child: SingleChildScrollView(
-            child: GestureDetector(
-              onTap: () {
-                FocusManager.instance.primaryFocus?.unfocus();
-              },
+          child: GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 30,
@@ -208,6 +210,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       AppButton(
                         label: "Đăng nhập",
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         onPressed: () {
                           if (_signInFormKey.currentState!.validate())
                             _submit();
@@ -252,6 +255,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       AppButtonWithIcon(
                         label: "Tiếp tục với Google",
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                       ),
                     ],
                   ),

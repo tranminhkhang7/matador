@@ -6,6 +6,8 @@ String gilroyFontFamily = "Gilroy";
 ThemeData themeData = ThemeData(
     fontFamily: gilroyFontFamily,
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    colorScheme:
-        ColorScheme.fromSwatch().copyWith(secondary: AppColors.primaryColor),
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      primary: AppColors.primaryColor,
+      secondary: AppColors.primaryColor,
+    ),
     scaffoldBackgroundColor: AppColors.scaffoldBackgroundColor);
