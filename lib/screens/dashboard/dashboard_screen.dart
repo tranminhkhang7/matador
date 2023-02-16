@@ -1,3 +1,4 @@
+import 'package:bottom_bar_page_transition/bottom_bar_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:grocery_app/styles/colors.dart';
@@ -15,7 +16,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: navigatorItems[currentIndex].screen,
+      body: BottomBarPageTransition(
+        builder: (_, index) {
+          return navigatorItems[index].screen;
+        },
+        currentIndex: currentIndex,
+        totalLength: navigatorItems.length,
+        transitionType: TransitionType.slide,
+        transitionCurve: Curves.fastOutSlowIn,
+        transitionDuration: const Duration(milliseconds: 500),
+      ),
+
+      //navigatorItems[currentIndex].screen,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
