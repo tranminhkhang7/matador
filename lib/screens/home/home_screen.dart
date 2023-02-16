@@ -7,7 +7,8 @@ import 'package:grocery_app/widgets/grocery_item_card_widget.dart';
 import 'package:grocery_app/widgets/search_bar_widget.dart';
 
 import 'grocery_featured_Item_widget.dart';
-import 'home_banner_widget.dart';
+import 'package:grocery_app/widgets/custom_carousel.dart';
+import 'package:grocery_app/widgets/home_categories.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -34,7 +35,32 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 25,
                   ),
-                  padded(HomeBanner()),
+                  CarouselWidget(
+                    images: [
+                      'assets/images/carousel1.jpg',
+                      'assets/images/carousel2.jpg',
+                      'assets/images/carousel3.jpg',
+                      'assets/images/carousel4.jpg',
+                      'assets/images/carousel5.jpg',
+                    ],
+                  ),
+                  SizedBox(
+                    height: 200,
+                    child: CategoryGridView(
+                      icons: [
+                        'assets/icons/genre20.jpg',
+                        'assets/icons/genre28.jpg',
+                        'assets/icons/genre22.jpg',
+                        'assets/icons/genre30.jpg',
+                        'assets/icons/genre12.jpg',
+                        'assets/icons/genre13.jpg',
+                        'assets/icons/genre8.jpg',
+                        'assets/icons/genre21.jpg',
+                        'assets/icons/genre26.jpg',
+                        'assets/icons/genre17.jpg',
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: 25,
                   ),

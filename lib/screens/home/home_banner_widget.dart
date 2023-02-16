@@ -6,7 +6,7 @@ class HomeBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 500,
+      width: MediaQuery.of(context).size.width,
       height: 115,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
@@ -21,6 +21,7 @@ class HomeBanner extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Image.asset(
               "assets/images/banner_image.png",
+              width: 90,
             ),
           ),
           Spacer(),

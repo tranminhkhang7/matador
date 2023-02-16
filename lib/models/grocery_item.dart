@@ -29,7 +29,7 @@ var demoItems = [
       imagePath: "assets/images/grocery_images/apple.png"),
   GroceryItem(
       id: 3,
-      name: "Bell Pepper Red",
+      name: "Bell Pepper",
       description: "1kg, Priceg",
       price: 4.99,
       imagePath: "assets/images/grocery_images/pepper.png"),
@@ -51,11 +51,17 @@ var demoItems = [
       description: "250gm, Priceg",
       price: 4.99,
       imagePath: "assets/images/grocery_images/chicken.png"),
+  GroceryItem(
+      id: 7,
+      name: "Chikken2",
+      description: "250gm, Priceg",
+      price: 4.99,
+      imagePath: "assets/images/grocery_images/chicken.png"),
 ];
 
-var exclusiveOffers = [demoItems[0], demoItems[1]];
+var exclusiveOffers = [demoItems[0], demoItems[1], demoItems[2]];
 
-var bestSelling = [demoItems[2], demoItems[3]];
+var bestSelling = [demoItems[6], demoItems[3]];
 
 var groceries = [demoItems[4], demoItems[5]];
 
