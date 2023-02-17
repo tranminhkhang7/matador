@@ -3,13 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
 import 'package:grocery_app/helpers/column_with_seprator.dart';
+import 'package:grocery_app/providers/user_provider.dart';
 import 'package:grocery_app/styles/colors.dart';
+import 'package:provider/provider.dart';
 
 import 'account_item.dart';
 
 class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).account;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -24,7 +27,7 @@ class AccountScreen extends StatelessWidget {
                   leading:
                       SizedBox(width: 65, height: 65, child: getImageHeader()),
                   title: AppText(
-                    text: "Mohammed Hashim",
+                    text: user.token,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),

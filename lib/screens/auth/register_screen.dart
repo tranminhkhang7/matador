@@ -15,7 +15,8 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen>
+    with AutomaticKeepAliveClientMixin {
   final _signUpFormKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
@@ -23,10 +24,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late bool _isFilled;
   bool _isLoading = false;
   final AuthService authService = AuthService();
-  Account account = Account(email: '', password: '');
+
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -34,7 +34,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setFilled();
     _emailController.addListener(setFilled);
@@ -53,8 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _isLoading = true;
     });
     FocusManager.instance.primaryFocus?.unfocus();
-    await Future.delayed(const Duration(seconds: 2));
-    account = await authService.signUpUser(
+    await authService.signUpUser(
       context: context,
       email: _emailController.text,
       password: _passwordController.text,
@@ -62,17 +60,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() {
       _isLoading = false;
     });
-    navigateToBottomBar(account);
+    //navigateToBottomBar(account);
   }
 
-  void navigateToBottomBar(Account account) {
-    if (account.email != '' && account.password != '') {
-      widget.callback!(1);
-    }
-  }
+  // void navigateToBottomBar(Account account) {
+  //   if (account.email != '' && account.password != '') {
+  //     widget.callback!(1);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -156,6 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 50,
                       ),
                       AppButton(
+                        onPressed: () => signUpUser(),
                         label: "Đăng ký",
                         padding: const EdgeInsets.symmetric(vertical: 20),
                       ),
@@ -172,4 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_app/providers/user_provider.dart';
 import 'package:grocery_app/screens/auth/login_screen.dart';
 import 'package:grocery_app/screens/auth/register_screen.dart';
 import 'package:grocery_app/screens/account/account_screen.dart';
 import 'package:grocery_app/styles/colors.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -14,7 +18,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   int _page = 0;
-  int _value = 0;
+
   @override
   void initState() {
     super.initState();
@@ -27,10 +31,8 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     }
   }
 
-  callback(newValue) {
-    setState(() {
-      _value = newValue;
-    });
+  callback() {
+    setState(() {});
   }
 
   @override
@@ -48,7 +50,8 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return _value == 1
+    final user = context.watch<UserProvider>().account;
+    return user.token.isNotEmpty
         ? AccountScreen()
         : DefaultTabController(
             length: 2,

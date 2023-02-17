@@ -24,7 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         totalLength: navigatorItems.length,
         transitionType: TransitionType.slide,
         transitionCurve: Curves.fastOutSlowIn,
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 700),
       ),
 
       //navigatorItems[currentIndex].screen,

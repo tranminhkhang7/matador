@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_app/models/grocery_item.dart';
+import 'package:grocery_app/screens/home/search_delegate.dart';
 import 'package:grocery_app/screens/product_details/product_details_screen.dart';
 import 'package:grocery_app/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,7 +31,38 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 15,
                   ),
-                  padded(SearchBarWidget()),
+                  padded(
+                    IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          showSearch(
+                              context: context, delegate: SearchBookDelegate());
+                        }),
+                    // TextFormField(
+                    //   onFieldSubmitted: (value) {},
+                    //   decoration: InputDecoration(
+                    //     prefixIcon: InkWell(
+                    //       onTap: () {},
+                    //       child: const Padding(
+                    //         padding: EdgeInsets.only(left: 6),
+                    //         child: Icon(
+                    //           Icons.search,
+                    //           color: Colors.black,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     filled: true,
+                    //     contentPadding: const EdgeInsets.only(
+                    //       top: 10,
+                    //     ),
+                    //     hintText: 'Search for your books',
+                    //     hintStyle: const TextStyle(
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 17,
+                    //     ),
+                    //   ),
+                    // ),
+                  ),
                   SizedBox(
                     height: 25,
                   ),
