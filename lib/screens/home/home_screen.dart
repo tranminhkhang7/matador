@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_app/models/grocery_item.dart';
+import 'package:grocery_app/screens/home/search_delegate.dart';
 import 'package:grocery_app/screens/product_details/product_details_screen.dart';
 import 'package:grocery_app/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,7 +32,54 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 15,
                   ),
-                  padded(SearchBarWidget()),
+                  padded(
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        side:
+                            BorderSide(color: AppColors.lightGrey, width: 1.5),
+                        borderRadius: BorderRadius.circular(
+                          30,
+                        ),
+                      ),
+                      leading: Icon(Icons.search),
+                      contentPadding: const EdgeInsets.only(
+                        left: 30,
+                      ),
+                      title: const Text(
+                        'Search for your books',
+                      ),
+                      onTap: () {
+                        showSearch(
+                          context: context,
+                          delegate: SearchBookDelegate(),
+                        );
+                      },
+                    ),
+                    // TextFormField(
+                    //   onFieldSubmitted: (value) {},
+                    //   decoration: InputDecoration(
+                    //     prefixIcon: InkWell(
+                    //       onTap: () {},
+                    //       child: const Padding(
+                    //         padding: EdgeInsets.only(left: 6),
+                    //         child: Icon(
+                    //           Icons.search,
+                    //           color: Colors.black,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     filled: true,
+                    //     contentPadding: const EdgeInsets.only(
+                    //       top: 10,
+                    //     ),
+                    //     hintText: 'Search for your books',
+                    //     hintStyle: const TextStyle(
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 17,
+                    //     ),
+                    //   ),
+                    // ),
+                  ),
                   SizedBox(
                     height: 25,
                   ),

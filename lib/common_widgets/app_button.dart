@@ -91,11 +91,10 @@ class AppButtonWithIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      child: ElevatedButton.icon(
+      child: ElevatedButton(
         onPressed: () {
           onPressed?.call();
         },
-        icon: const FaIcon(FontAwesomeIcons.google, size: 20),
         style: ElevatedButton.styleFrom(
           visualDensity: VisualDensity.compact,
           shape: RoundedRectangleBorder(
@@ -111,37 +110,27 @@ class AppButtonWithIcon extends StatelessWidget {
           padding: padding,
           minimumSize: const Size.fromHeight(50),
         ),
-        label: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            label, textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: fontWeight,
+        child: Stack(
+          fit: StackFit.passthrough,
+          children: <Widget>[
+            if (trailingWidget != null)
+              Positioned(
+                top: 0,
+                left: 30,
+                child: trailingWidget!,
+              ),
+            Center(
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: fontWeight,
+                ),
+              ),
             ),
-
-            // Stack(
-            //   fit: StackFit.passthrough,
-            //   children: <Widget>[
-            //     Center(
-            // child: Text(
-            //   label,
-            //   textAlign: TextAlign.center,
-            //   style: TextStyle(
-            //     fontSize: 18,
-            //     fontWeight: fontWeight,
-            //   ),
-            // ),
-          ),
+          ],
         ),
-        //     if (trailingWidget != null)
-        //       Positioned(
-        //         top: 0,
-        //         right: 25,
-        //         child: trailingWidget!,
-        //       ),
-        //   ],
-        // ),
       ),
     );
   }

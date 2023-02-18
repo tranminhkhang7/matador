@@ -6,7 +6,8 @@ class AppText extends StatelessWidget {
   final FontWeight fontWeight;
   final Color color;
   final TextAlign? textAlign;
-
+  final int maxLines;
+  final TextOverflow? textOverflow;
   const AppText({
     Key? key,
     required this.text,
@@ -14,12 +15,13 @@ class AppText extends StatelessWidget {
     this.fontWeight = FontWeight.normal,
     this.color = Colors.black,
     this.textAlign,
+    this.maxLines = 1,
+    this.textOverflow,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      overflow: TextOverflow.ellipsis,
       text,
       textAlign: textAlign == null ? null : TextAlign.center,
       style: TextStyle(
@@ -27,6 +29,8 @@ class AppText extends StatelessWidget {
         fontWeight: fontWeight,
         color: color,
       ),
+      maxLines: maxLines,
+      overflow: textOverflow,
     );
   }
 }
