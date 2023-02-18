@@ -19,6 +19,7 @@ class AppText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
+      overflow: TextOverflow.ellipsis,
       text,
       textAlign: textAlign == null ? null : TextAlign.center,
       style: TextStyle(

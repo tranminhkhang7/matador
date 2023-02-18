@@ -17,13 +17,13 @@ class GroceryItem {
 var demoItems = [
   GroceryItem(
       id: 1,
-      name: "Organic Bananas",
+      name: "Komi - Nữ Thần Sợ Giao Tiếp",
       description: "7pcs, Priceg",
       price: 4.99,
       imagePath: "assets/images/grocery_images/banana.png"),
   GroceryItem(
       id: 2,
-      name: "Red Apple",
+      name: "Đắc Nhân Tâm",
       description: "1kg, Priceg",
       price: 4.99,
       imagePath: "assets/images/grocery_images/apple.png"),

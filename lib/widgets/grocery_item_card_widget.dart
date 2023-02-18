@@ -9,10 +9,10 @@ class GroceryItemCardWidget extends StatelessWidget {
   final GroceryItem item;
   final String? heroSuffix;
 
-  final double width = 174;
+  final double width = 168;
   final double height = 250;
   final Color borderColor = Color(0xffE2E2E2);
-  final double borderRadius = 18;
+  final double borderRadius = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -46,26 +46,23 @@ class GroceryItemCardWidget extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            AppText(
-              text: item.name,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+            Container(
+              alignment: Alignment.topLeft,
+              height: 34,
+              child: AppText(
+                text: item.name,
+                fontSize: 11,
+                fontWeight: FontWeight.normal,
+              ),
             ),
-            AppText(
-              text: item.description,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF7C7C7C),
-            ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 2),
             Row(
               children: [
                 AppText(
                   text: "\$${item.price.toStringAsFixed(2)}",
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
                 ),
                 Spacer(),
                 addWidget()
@@ -88,7 +85,7 @@ class GroceryItemCardWidget extends StatelessWidget {
       height: 45,
       width: 45,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(17),
+          borderRadius: BorderRadius.circular(14),
           color: AppColors.primaryColor),
       child: Center(
         child: Icon(

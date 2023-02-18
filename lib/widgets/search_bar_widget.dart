@@ -23,7 +23,7 @@ class SearchBarWidget extends StatelessWidget {
             width: 8,
           ),
           Text(
-            "Search Store",
+            "Tìm kiếm...",
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

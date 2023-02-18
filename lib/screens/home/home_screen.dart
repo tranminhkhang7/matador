@@ -64,49 +64,49 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 25,
                   ),
-                  padded(subTitle("Exclusive Order")),
+                  padded(subTitle("Chủ Đề Hấp Dẫn")),
                   getHorizontalItemSlider(exclusiveOffers),
                   SizedBox(
                     height: 15,
                   ),
-                  padded(subTitle("Best Selling")),
+                  padded(subTitle("Bán Chạy")),
                   getHorizontalItemSlider(bestSelling),
                   SizedBox(
                     height: 15,
                   ),
-                  padded(subTitle("Groceries")),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    height: 105,
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        SizedBox(
-                          width: 20,
-                        ),
-                        GroceryFeaturedCard(
-                          groceryFeaturedItems[0],
-                          color: Color(0xffF8A44C),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        GroceryFeaturedCard(
-                          groceryFeaturedItems[1],
-                          color: AppColors.primaryColor,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
+                  padded(subTitle("Sách Mới")),
+                  // SizedBox(
+                  //   height: 15,
+                  // ),
+                  // Container(
+                  //   height: 105,
+                  //   child: ListView(
+                  //     padding: EdgeInsets.zero,
+                  //     scrollDirection: Axis.horizontal,
+                  //     children: [
+                  //       SizedBox(
+                  //         width: 20,
+                  //       ),
+                  //       GroceryFeaturedCard(
+                  //         groceryFeaturedItems[0],
+                  //         color: Color(0xffF8A44C),
+                  //       ),
+                  //       SizedBox(
+                  //         width: 20,
+                  //       ),
+                  //       GroceryFeaturedCard(
+                  //         groceryFeaturedItems[1],
+                  //         color: AppColors.primaryColor,
+                  //       ),
+                  //       SizedBox(
+                  //         width: 20,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: 15,
+                  // ),
                   getHorizontalItemSlider(groceries),
                   SizedBox(
                     height: 15,
@@ -132,7 +132,7 @@ class HomeScreen extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10),
       height: 250,
       child: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 8),
         itemCount: items.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
@@ -148,7 +148,7 @@ class HomeScreen extends StatelessWidget {
         },
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(
-            width: 20,
+            width: 8,
           );
         },
       ),
@@ -171,11 +171,11 @@ class HomeScreen extends StatelessWidget {
       children: [
         Text(
           text,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         Spacer(),
         Text(
-          "See All",
+          "Xem thêm",
           style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
