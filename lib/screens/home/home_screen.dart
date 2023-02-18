@@ -32,12 +32,28 @@ class HomeScreen extends StatelessWidget {
                     height: 15,
                   ),
                   padded(
-                    IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {
-                          showSearch(
-                              context: context, delegate: SearchBookDelegate());
-                        }),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        side:
+                            BorderSide(color: AppColors.lightGrey, width: 1.5),
+                        borderRadius: BorderRadius.circular(
+                          30,
+                        ),
+                      ),
+                      leading: Icon(Icons.search),
+                      contentPadding: const EdgeInsets.only(
+                        left: 30,
+                      ),
+                      title: const Text(
+                        'Search for your books',
+                      ),
+                      onTap: () {
+                        showSearch(
+                          context: context,
+                          delegate: SearchBookDelegate(),
+                        );
+                      },
+                    ),
                     // TextFormField(
                     //   onFieldSubmitted: (value) {},
                     //   decoration: InputDecoration(

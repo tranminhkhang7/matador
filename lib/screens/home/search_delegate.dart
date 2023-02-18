@@ -34,37 +34,66 @@ class SearchBookDelegate extends SearchDelegate {
   @override
   void showResults(BuildContext context) {
     Navigator.of(context).popAndPushNamed(
-      RoutesHandler.ACCOUNT,
+      RoutesHandler.SEARCH_ALL,
       arguments: query,
     );
     super.showResults(context);
   }
 
+  void navigateToBookDetailScreen(BookItem b, BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      RoutesHandler.SINGLE_PRODUCT,
+      arguments: b,
+    );
+  }
+
   @override
   Widget buildSuggestions(BuildContext context) {
-    final searchProvider = context.watch<SearchItemsProvider>();
-    Future<List<BookItem>> result = searchProvider.search(context, query);
-    return FutureBuilder(
-      future: result,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return ListView.builder(
-            itemCount: snapshot.data!.length >= 10 ? 10 : snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: Icon(Icons.book),
-                title: Text(snapshot.data![index].title),
-                onTap: () {},
-              );
+    late Future<List<BookItem>> result;
+    if (query.isNotEmpty || query != '') {
+      final searchProvider = context.watch<SearchItemsProvider>();
+      result = searchProvider.search(context, query);
+    } else {}
+
+    return query.isEmpty || query == ''
+        ? SizedBox()
+        : FutureBuilder(
+            future: result,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return ListView.builder(
+                  itemCount:
+                      snapshot.data!.length >= 10 ? 10 : snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: ListTile(
+                        leading: ClipRRect(
+                          child: Image.network(
+                            snapshot.data![index].imageLink,
+                            height: 100,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(2),
+                          ),
+                        ),
+                        title: Text(snapshot.data![index].title),
+                        onTap: () => navigateToBookDetailScreen(
+                          snapshot.data![index],
+                          context,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Loader();
+              } else {
+                return const SizedBox();
+              }
             },
           );
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Loader();
-        } else {
-          return const SizedBox();
-        }
-      },
-    );
   }
 }

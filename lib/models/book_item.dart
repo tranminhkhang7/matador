@@ -7,7 +7,7 @@ class BookItem {
   final String imageLink;
   final double price;
   final String publisher;
-  final int quantityLeft;
+  final String quantityLeft;
   final String status;
   final String title;
   BookItem({
@@ -29,7 +29,7 @@ class BookItem {
     String? imageLink,
     double? price,
     String? publisher,
-    int? quantityLeft,
+    String? quantityLeft,
     String? status,
     String? title,
   }) {
@@ -68,7 +68,7 @@ class BookItem {
       imageLink: map['imageLink'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,
       publisher: map['publisher'] ?? '',
-      quantityLeft: map['quantityLeft']?.toInt() ?? 0,
+      quantityLeft: map['quantityLeft'] ?? '',
       status: map['status'] ?? '',
       title: map['title'] ?? '',
     );

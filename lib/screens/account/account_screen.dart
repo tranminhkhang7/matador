@@ -41,7 +41,10 @@ class AccountScreen extends StatelessWidget {
                 Column(
                   children: getChildrenWithSeperator(
                     widgets: accountItems.map((e) {
-                      return getAccountItemWidget(e);
+                      return InkWell(
+                        child: getAccountItemWidget(e),
+                        onTap: () {},
+                      );
                     }).toList(),
                     seperator: Divider(
                       thickness: 1,

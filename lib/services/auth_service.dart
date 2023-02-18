@@ -28,7 +28,7 @@ class AuthService {
       //   name: '',
       // );
       http.Response res = await http.post(
-        Uri.parse("https://8b6c-171-252-155-251.ap.ngrok.io/auth/signup"),
+        Uri.parse("$uriCuaKhoa/auth/signup"),
         body: jsonEncode({
           'email': email,
           'password': password,
@@ -63,7 +63,7 @@ class AuthService {
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
       http.Response res = await http.post(
-        Uri.parse("https://8b6c-171-252-155-251.ap.ngrok.io/auth/signin"),
+        Uri.parse("$uriCuaKhoa/auth/signin"),
         body: jsonEncode({
           'email': email,
           'password': password,
