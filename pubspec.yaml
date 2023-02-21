@@ -22,6 +22,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   pin_code_fields: ^7.4.0
   shared_preferences: ^2.0.17
+  intl: ^0.18.0
   provider: ^6.0.5
 
 dev_dependencies:
@@ -39,6 +40,7 @@ flutter:
     - assets/images/grocery_images/
     - assets/images/beverages_images/
     - assets/icons/
+    - assets/icons/genre_icons/
     - assets/icons/account_icons/
     - assets/fonts/
 

@@ -17,11 +17,34 @@ class NavigatorItem {
 }
 
 List<NavigatorItem> navigatorItems = [
-  NavigatorItem("Trang chủ", "assets/icons/shop_icon.svg", 0, HomeScreen()),
   NavigatorItem(
-      "Khám phá", "assets/icons/explore_icon.svg", 1, ExploreScreen()),
-  NavigatorItem("Giỏ hàng", "assets/icons/cart_icon.svg", 2, CartScreen()),
+    "Trang chủ",
+    "assets/icons/shop_icon.svg",
+    0,
+    HomeScreen(),
+  ),
   NavigatorItem(
-      "Yêu thích", "assets/icons/favourite_icon.svg", 3, FavouriteScreen()),
-  NavigatorItem("Tài khoản", "assets/icons/account_icon.svg", 4, AuthScreen()),
+    "Khám phá",
+    "assets/icons/explore_icon.svg",
+    1,
+    ExploreScreen(),
+  ),
+  NavigatorItem(
+    "Giỏ hàng",
+    "assets/icons/cart_icon.svg",
+    2,
+    CartScreen(),
+  ),
+  NavigatorItem(
+    "Yêu thích",
+    "assets/icons/favourite_icon.svg",
+    3,
+    FavouriteScreen(),
+  ),
+  NavigatorItem(
+    "Tài khoản",
+    "assets/icons/account_icon.svg",
+    4,
+    AuthScreen(),
+  ),
 ];

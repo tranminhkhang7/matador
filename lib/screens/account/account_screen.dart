@@ -2,14 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
+import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/helpers/column_with_seprator.dart';
 import 'package:grocery_app/providers/user_provider.dart';
+import 'package:grocery_app/services/auth_service.dart';
 import 'package:grocery_app/styles/colors.dart';
 import 'package:provider/provider.dart';
 
 import 'account_item.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
+  final Function? callback;
+  const AccountScreen({
+    Key? key,
+    this.callback,
+  }) : super(key: key);
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  final AuthService authService = AuthService();
+
+  void navigateToUserProfile(BuildContext context, String location) {
+    switch (location) {
+      case "My Details":
+        Navigator.pushNamed(
+          context,
+          RoutesHandler.USER_PROFILE,
+        );
+        break;
+      case "Orders":
+        Navigator.pushNamed(
+          context,
+          RoutesHandler.ORDERS,
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  void logout(BuildContext context) async {
+    await authService.logout(context);
+    widget.callback!();
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).account;
@@ -27,12 +65,12 @@ class AccountScreen extends StatelessWidget {
                   leading:
                       SizedBox(width: 65, height: 65, child: getImageHeader()),
                   title: AppText(
-                    text: user.token,
+                    text: user.name,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                   subtitle: AppText(
-                    text: "github.com/mohammedhashim44",
+                    text: user.email,
                     color: Color(0xff7C7C7C),
                     fontWeight: FontWeight.normal,
                     fontSize: 16,
@@ -43,7 +81,7 @@ class AccountScreen extends StatelessWidget {
                     widgets: accountItems.map((e) {
                       return InkWell(
                         child: getAccountItemWidget(e),
-                        onTap: () {},
+                        onTap: () => navigateToUserProfile(context, e.label),
                       );
                     }).toList(),
                     seperator: Divider(
@@ -54,7 +92,7 @@ class AccountScreen extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                logoutButton(),
+                logoutButton(context),
                 SizedBox(
                   height: 20,
                 )
@@ -66,7 +104,7 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget logoutButton() {
+  Widget logoutButton(BuildContext context) {
     return Container(
       width: double.maxFinite,
       margin: EdgeInsets.symmetric(horizontal: 25),
@@ -105,7 +143,7 @@ class AccountScreen extends StatelessWidget {
             Container()
           ],
         ),
-        onPressed: () {},
+        onPressed: () => logout(context),
       ),
     );
   }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
+
+import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/models/book_item.dart';
-import 'package:grocery_app/screens/search/widgets/searched_item.dart';
+
+import 'package:grocery_app/widgets/book_item_card_widget.dart';
 
 import 'package:grocery_app/widgets/item_counter_widget.dart';
 
@@ -25,14 +28,9 @@ class BookDetailScreen extends StatefulWidget {
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
   int amount = 1;
-  List<BookItem> mockList = [];
+  // List<BookItem> mockList = bookItemList;
   @override
   void initState() {
-    mockList.add(widget.bookItem);
-    mockList.add(widget.bookItem);
-    mockList.add(widget.bookItem);
-    mockList.add(widget.bookItem);
-    mockList.add(widget.bookItem);
     super.initState();
   }
 
@@ -67,16 +65,20 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
             horizontal: 25,
           ),
           child: AppText(
-            text: "Books",
+            text: widget.bookItem.title,
             fontWeight: FontWeight.bold,
             fontSize: 20,
+            maxLines: 1,
+            textOverflow: TextOverflow.ellipsis,
           ),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
+      body: LayoutBuilder(
+        builder: (context, constraint) => SingleChildScrollView(
+            child: ConstrainedBox(
+          constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height * 1.2),
+          child: IntrinsicHeight(
             child: Column(
               children: [
                 getImageHeaderWidget(),
@@ -91,13 +93,15 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             widget.bookItem.title,
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           subtitle: AppText(
                             text: widget.bookItem.description,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Color(0xff7C7C7C),
-                            maxLines: 6,
+                            maxLines: 5,
                           ),
                           trailing: FavoriteToggleIcon(),
                         ),
@@ -121,7 +125,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             ),
                           ],
                         ),
-                        //getHorizontalItemSlider(mockList),
+                        Divider(thickness: 1),
+                        // getHorizontalItemSlider(mockList),
                         Divider(thickness: 1),
                         getProductDataRowWidget("Product Details"),
                         Divider(thickness: 1),
@@ -141,9 +146,17 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 ),
               ],
             ),
-          )
-        ],
+          ),
+        )),
       ),
+    );
+  }
+
+  void navigateToBookDetailScreen(BookItem b) {
+    Navigator.pushNamed(
+      context,
+      RoutesHandler.SINGLE_PRODUCT,
+      arguments: b,
     );
   }
 
@@ -156,9 +169,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {},
-            child: SearchedItem(
-              book: items[index],
+            onTap: () => navigateToBookDetailScreen(items[index]),
+            child: BookItemCardWidget(
+              item: items[index],
             ),
           );
         },

@@ -21,13 +21,32 @@ class SearchBookDelegate extends SearchDelegate {
   }
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    return theme.copyWith(
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+        backgroundColor: colorScheme.brightness == Brightness.dark
+            ? Colors.grey[900]
+            : Colors.white,
+        iconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
+      ),
+      inputDecorationTheme: searchFieldDecorationTheme ??
+          InputDecorationTheme(
+            hintStyle: searchFieldStyle ?? theme.inputDecorationTheme.hintStyle,
+            border: InputBorder.none,
+          ),
+    );
+  }
+
+  @override
   Widget? buildLeading(BuildContext context) {
     return null;
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     return const SizedBox();
   }
 
@@ -54,10 +73,12 @@ class SearchBookDelegate extends SearchDelegate {
     if (query.isNotEmpty || query != '') {
       final searchProvider = context.watch<SearchItemsProvider>();
       result = searchProvider.search(context, query);
-    } else {}
+    }
 
     return query.isEmpty || query == ''
-        ? SizedBox()
+        ? SizedBox(
+            child: const Text('Search for ur result'),
+          )
         : FutureBuilder(
             future: result,
             builder: (context, snapshot) {

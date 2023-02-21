@@ -29,77 +29,77 @@ class _ChartItemWidgetState extends State<ChartItemWidget> {
       margin: EdgeInsets.symmetric(
         vertical: 30,
       ),
-      child: IntrinsicHeight(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            imageWidget(),
-            Container(
-              width: MediaQuery.of(context).size.width * .46,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppText(
-                    text: widget.item.name,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    textOverflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  AppText(
-                      text: widget.item.description,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.darkGrey),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Spacer(),
-                  ItemCounterWidget(
-                    onAmountChanged: (newAmount) {
-                      setState(() {
-                        amount = newAmount;
-                      });
-                    },
-                  )
-                ],
-              ),
-            ),
-            Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          imageWidget(),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.close,
-                  color: AppColors.darkGrey,
-                  size: 25,
+                AppText(
+                  text: widget.item.name,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  textOverflow: TextOverflow.ellipsis,
                 ),
-                Spacer(
-                  flex: 5,
+                SizedBox(
+                  height: 5,
                 ),
-                Container(
-                  width: 70,
-                  child: AppText(
-                    text: "\$${getPrice().toStringAsFixed(2)}",
-                    fontSize: 18,
+                AppText(
+                    text: widget.item.description,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    textAlign: TextAlign.right,
-                  ),
+                    color: AppColors.darkGrey),
+                SizedBox(
+                  height: 12,
                 ),
                 Spacer(),
+                ItemCounterWidget(
+                  onAmountChanged: (newAmount) {
+                    setState(() {
+                      amount = newAmount;
+                    });
+                  },
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+          Column(
+            children: [
+              Icon(
+                Icons.close,
+                color: AppColors.darkGrey,
+                size: 25,
+              ),
+              Spacer(
+                flex: 5,
+              ),
+              Container(
+                width: 70,
+                child: AppText(
+                  text: "\$${getPrice().toStringAsFixed(2)}",
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              Spacer(),
+            ],
+          )
+        ],
       ),
     );
   }
 
   Widget imageWidget() {
     return Container(
-      width: 100,
-      child: Image.asset(widget.item.imagePath),
+      width: 75,
+      child: Image.asset(
+        widget.item.imagePath,
+        fit: BoxFit.contain,
+      ),
     );
   }
 

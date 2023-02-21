@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class BookItem {
-  final int id;
+  final int bookId;
   final String author;
   final String description;
   final String imageLink;
@@ -11,7 +11,7 @@ class BookItem {
   final String status;
   final String title;
   BookItem({
-    required this.id,
+    required this.bookId,
     required this.author,
     required this.description,
     required this.imageLink,
@@ -23,7 +23,7 @@ class BookItem {
   });
 
   BookItem copyWith({
-    int? id,
+    int? bookId,
     String? author,
     String? description,
     String? imageLink,
@@ -34,7 +34,7 @@ class BookItem {
     String? title,
   }) {
     return BookItem(
-      id: id ?? this.id,
+      bookId: bookId ?? this.bookId,
       author: author ?? this.author,
       description: description ?? this.description,
       imageLink: imageLink ?? this.imageLink,
@@ -48,7 +48,7 @@ class BookItem {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'bookId': bookId,
       'author': author,
       'description': description,
       'imageLink': imageLink,
@@ -62,7 +62,7 @@ class BookItem {
 
   factory BookItem.fromMap(Map<String, dynamic> map) {
     return BookItem(
-      id: map['id']?.toInt() ?? 0,
+      bookId: map['bookId']?.toInt() ?? 0,
       author: map['author'] ?? '',
       description: map['description'] ?? '',
       imageLink: map['imageLink'] ?? '',
@@ -81,7 +81,7 @@ class BookItem {
 
   @override
   String toString() {
-    return 'BookItem(id: $id, author: $author, description: $description, imageLink: $imageLink, price: $price, publisher: $publisher, quantityLeft: $quantityLeft, status: $status, title: $title)';
+    return 'BookItem(id: $bookId, author: $author, description: $description, imageLink: $imageLink, price: $price, publisher: $publisher, quantityLeft: $quantityLeft, status: $status, title: $title)';
   }
 
   @override
@@ -89,7 +89,7 @@ class BookItem {
     if (identical(this, other)) return true;
 
     return other is BookItem &&
-        other.id == id &&
+        other.bookId == bookId &&
         other.author == author &&
         other.description == description &&
         other.imageLink == imageLink &&
@@ -102,7 +102,7 @@ class BookItem {
 
   @override
   int get hashCode {
-    return id.hashCode ^
+    return bookId.hashCode ^
         author.hashCode ^
         description.hashCode ^
         imageLink.hashCode ^

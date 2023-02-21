@@ -52,7 +52,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().account;
     return user.token.isNotEmpty
-        ? AccountScreen()
+        ? AccountScreen(
+            callback: callback,
+          )
         : DefaultTabController(
             length: 2,
             child: Scaffold(

@@ -14,8 +14,8 @@ class Account {
     required this.token,
     required this.name,
     required this.gender,
-    DateTime? birthDate,
-  }) : this.birthDate = DateTime.now();
+    required this.birthDate,
+  });
 
   Account copyWith({
     String? email,
@@ -31,7 +31,7 @@ class Account {
       token: token ?? this.token,
       name: name ?? this.name,
       gender: gender ?? this.gender,
-      birthDate: birthDate ?? this.birthDate,
+      birthDate: birthDate ?? DateTime.now(),
     );
   }
 
@@ -53,7 +53,7 @@ class Account {
       token: map['token'] ?? '',
       name: map['name'] ?? '',
       gender: map['gender'] ?? '',
-      birthDate: DateTime.fromMillisecondsSinceEpoch(map['birthDate']),
+      birthDate: DateTime.fromMillisecondsSinceEpoch(map['birthDate'] * 1000),
     );
   }
 

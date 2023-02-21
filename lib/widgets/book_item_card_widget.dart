@@ -49,7 +49,7 @@ class BookItemCardWidget extends StatelessWidget {
               child: Center(
                 child: Hero(
                   tag: "BookItem: ${generateRandomString(5)}" +
-                      item.id.toString() +
+                      item.bookId.toString() +
                       "-" +
                       (heroSuffix ?? ""),
                   child: imageWidget(),
@@ -60,15 +60,19 @@ class BookItemCardWidget extends StatelessWidget {
               height: 20,
             ),
             AppText(
-              text: item.title,
+              text: item.bookId.toString(),
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              maxLines: 1,
+              textOverflow: TextOverflow.ellipsis,
             ),
             AppText(
               text: item.description,
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Color(0xFF7C7C7C),
+              maxLines: 1,
+              textOverflow: TextOverflow.ellipsis,
             ),
             SizedBox(
               height: 20,

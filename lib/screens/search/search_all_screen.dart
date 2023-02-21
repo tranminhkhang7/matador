@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:grocery_app/constants/constant.dart';
 import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/models/book_item.dart';
-import 'package:grocery_app/screens/search/widgets/searched_item.dart';
-import 'package:grocery_app/services/search_books_services.dart';
+import 'package:grocery_app/screens/home/search_delegate.dart';
+import 'package:grocery_app/screens/search/widgets/search_drawers.dart';
+import 'package:grocery_app/services/books_services.dart';
 import 'package:grocery_app/styles/colors.dart';
 import 'package:grocery_app/widgets/book_item_card_widget.dart';
 import 'package:grocery_app/widgets/loader.dart';
@@ -22,19 +22,29 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
+  ScrollController scrollController = ScrollController();
   List<BookItem> bookList = [];
-  SearchBooksService searchBooksService = SearchBooksService();
+  List<BookItem> displayBooks = [];
+  BooksService searchBooksService = BooksService();
 
+  int page = 1;
+  static final int _pageLimit = 6;
   @override
   void initState() {
-    _searchController.text = widget.searchQuery;
-    fetchSearchProducts();
+    if (mounted) {
+      _searchController.text = widget.searchQuery;
+      scrollController = ScrollController()..addListener(_scrollListener);
+      fetchSearchProducts();
+    }
+
     super.initState();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -43,6 +53,11 @@ class _SearchScreenState extends State<SearchScreen> {
       context: context,
       searchQuery: widget.searchQuery,
     );
+
+    displayBooks = bookList
+        .skip((_pageLimit * page) - _pageLimit)
+        .take(_pageLimit)
+        .toList();
     setState(() {});
     //log(productList.toString());
   }
@@ -64,12 +79,47 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  void _scrollListener() {
+    if (scrollController.position.extentAfter < 1) {
+      Future.delayed(
+        const Duration(seconds: 5),
+        () {
+          if (mounted) {
+            setState(
+              () {
+                page++;
+                displayBooks.addAll(bookList
+                    .skip((_pageLimit * page) - _pageLimit)
+                    .take(_pageLimit)
+                    .toList());
+              },
+            );
+          }
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: const FiltersDrawer(
+        maxPrice: 1000,
+      ),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
+          actions: [
+            Builder(builder: (context) {
+              return IconButton(
+                icon: Icon(
+                  Icons.filter_list,
+                  size: 30,
+                ),
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+              );
+            })
+          ],
           elevation: 0,
           titleSpacing: 0,
           flexibleSpace: Container(
@@ -78,7 +128,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           title: Container(
-            width: MediaQuery.of(context).size.width * .75,
+            width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
                 Expanded(
@@ -86,49 +136,52 @@ class _SearchScreenState extends State<SearchScreen> {
                     height: 42,
                     margin: const EdgeInsets.only(left: 15),
                     alignment: Alignment.topLeft,
-                    child: Material(
-                      borderRadius: BorderRadius.circular(7),
-                      elevation: 1,
-                      child: TextFormField(
-                        controller: _searchController,
-                        onFieldSubmitted: (value) {
-                          navigateToSearchScreen(value);
-                        },
-                        decoration: InputDecoration(
-                          prefixIcon: InkWell(
-                            onTap: () {},
-                            child: const Padding(
+                    child: InkWell(
+                      onTap: () {
+                        showSearch(
+                          context: context,
+                          delegate: SearchBookDelegate(),
+                        );
+                      },
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: _searchController,
+                          // onFieldSubmitted: (value) {
+                          //   navigateToSearchScreen(value);
+                          // },
+                          decoration: InputDecoration(
+                            prefixIcon: const Padding(
                               padding: EdgeInsets.only(left: 6),
                               child: Icon(
                                 Icons.search,
                                 color: Colors.black,
                               ),
                             ),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: const EdgeInsets.only(
-                            top: 10,
-                          ),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(7),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.only(
+                              top: 10,
                             ),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(7),
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(7),
+                              ),
+                              borderSide: BorderSide.none,
                             ),
-                            borderSide: BorderSide(
-                              color: Colors.black38,
-                              width: 1,
+                            enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(7),
+                              ),
+                              borderSide: BorderSide(
+                                color: Colors.black38,
+                                width: 1,
+                              ),
                             ),
-                          ),
-                          hintText: 'Search books',
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17,
+                            hintText: 'Search books',
+                            hintStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
                           ),
                         ),
                       ),
@@ -141,46 +194,28 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
       body: bookList.isEmpty
-          ? SingleChildScrollView(
-              child: StaggeredGrid.count(
-                crossAxisCount: 2,
-                // I only need two card horizontally
-                children: bookItems.asMap().entries.map<Widget>((e) {
-                  BookItem bookItem = BookItem.fromMap(e.value);
-                  return GestureDetector(
-                    onTap: () => navigateToBookDetailScreen(bookItem),
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: BookItemCardWidget(
-                        item: bookItem,
-                        heroSuffix: "book_item_screen",
+          ? const Loader()
+          : Scrollbar(
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: StaggeredGrid.count(
+                  crossAxisCount: 2,
+                  children: displayBooks.map<Widget>((e) {
+                    BookItem bookItem = e;
+                    return GestureDetector(
+                      onTap: () => navigateToBookDetailScreen(bookItem),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: BookItemCardWidget(
+                          item: bookItem,
+                          heroSuffix: "explore_screen",
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
-                mainAxisSpacing: 3.0,
-                crossAxisSpacing: 0.0, // add some space
-              ),
-            )
-          : SingleChildScrollView(
-              child: StaggeredGrid.count(
-                crossAxisCount: 2,
-                // I only need two card horizontally
-                children: bookList.map<Widget>((e) {
-                  BookItem bookItem = e;
-                  return GestureDetector(
-                    onTap: () => navigateToBookDetailScreen(bookItem),
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: BookItemCardWidget(
-                        item: bookItem,
-                        heroSuffix: "explore_screen",
-                      ),
-                    ),
-                  );
-                }).toList(),
-                mainAxisSpacing: 3.0,
-                crossAxisSpacing: 0.0, // add some space
+                    );
+                  }).toList(),
+                  mainAxisSpacing: 3.0,
+                  crossAxisSpacing: 0.0, // add some space
+                ),
               ),
             ),
     );

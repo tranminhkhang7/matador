@@ -4,9 +4,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:grocery_app/constants/constant.dart';
+import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/helpers/http_handler.dart';
 import 'package:grocery_app/helpers/snackbar.dart';
 import 'package:grocery_app/models/account.dart';
+import 'package:grocery_app/models/book_item.dart';
+import 'package:grocery_app/models/order.dart';
+import 'package:grocery_app/providers/favorite_list_providers.dart';
+import 'package:grocery_app/providers/order_list_provider.dart';
+import 'package:grocery_app/providers/search_list_provider.dart';
 import 'package:grocery_app/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -60,43 +66,57 @@ class AuthService {
     required String password,
   }) async {
     try {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
+      //SharedPreferences preferences = await SharedPreferences.getInstance();
+      if (email.isNotEmpty && password.isNotEmpty) {
+        http.Response res = await http.post(
+          Uri.parse("$uriCuaKhoa/auth/signin"),
+          body: jsonEncode({
+            'email': email,
+            'password': password,
+          }),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        ).timeout(
+          const Duration(seconds: 5),
+        );
 
-      http.Response res = await http.post(
-        Uri.parse("$uriCuaKhoa/auth/signin"),
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      ).timeout(
-        const Duration(seconds: 5),
-      );
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () async {
+            var data = json.decode(res.body) as Map<String, dynamic>;
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () async {
-          log(
-            jsonEncode({'token': res.body}),
-          );
-          Account account = Account(
-            email: email,
-            password: password,
-            token: res.body,
-            birthDate: null,
-            gender: '',
-            name: '',
-          );
-          var userProvider = Provider.of<UserProvider>(context, listen: false);
-          userProvider.setUserFromModel(account);
-          // await preferences.setString(
-          //     'Authorization', jsonDecode(res.body)['token']);
-          //await getUserData(context: context);
-        },
-      );
+            Account account = Account(
+              email: email,
+              password: password,
+              token: data['token'],
+              birthDate: DateTime.parse(data['customerDetail']['birthday']),
+              gender: data['customerDetail']['gender'],
+              name: data['customerDetail']['name'],
+            );
+
+            //user
+            var userProvider =
+                Provider.of<UserProvider>(context, listen: false);
+            userProvider.setUserFromModel(account);
+
+            //favList
+            var favBooksProvider =
+                Provider.of<FavoriteListProvider>(context, listen: false);
+            favBooksProvider.setFavoriteList(
+              await fetchFavoriteBooks(context, account.email, account.token),
+            );
+
+            //orderList
+            var orderProvider =
+                Provider.of<OrderListProvider>(context, listen: false);
+            orderProvider.setOrderList(
+              await fetchUserOrders(context, account.token),
+            );
+          },
+        );
+      }
     } on TimeoutException catch (_) {
       showSnackBar(context, "Timeout");
     } catch (e) {
@@ -104,32 +124,123 @@ class AuthService {
     }
   }
 
-  Future<void> getUserData({
-    required BuildContext context,
-  }) async {
+  Future<List<BookItem>> fetchFavoriteBooks(
+      BuildContext context, String email, String token) async {
+    List<BookItem> favoriteList = [];
     try {
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // String? token = prefs.getString('Authorization');
-
-      //log(response);
-
-      http.Response userResponse = await http.get(
-        Uri.parse('https://8b6c-171-252-155-251.ap.ngrok.io/'),
-        headers: <String, String>{
-          "Content-Type": "application/json; charset=UTF-8",
-          "x-auth-token": ''
-        },
-      ).timeout(
-        const Duration(
-          seconds: 10,
+      favoriteList.add(
+        BookItem(
+          bookId: 1,
+          author: 'Khoa',
+          description: 'des',
+          imageLink:
+              'https://www.google.com/photos/about/static/images/ui/logo-photos.png',
+          price: 3,
+          publisher: 'Khoa',
+          quantityLeft: '10',
+          status: 'available',
+          title: 'Book Test 1',
         ),
       );
-
-      var userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUser(userResponse.body);
-    } on TimeoutException catch (_) {
+      favoriteList.add(
+        BookItem(
+          bookId: 2,
+          author: 'Khoa',
+          description: 'des',
+          imageLink:
+              'https://www.google.com/photos/about/static/images/ui/logo-photos.png',
+          price: 3,
+          publisher: 'Khoa',
+          quantityLeft: '10',
+          status: 'available',
+          title: 'Book Test 1',
+        ),
+      );
+      // http.Response res = await http.get(Uri.parse('$uri/book/listBook/'),
+      //     headers: {
+      //       'Content-Type': 'application/json; charset=UTF-8',
+      //       'Authorization': token
+      //     });
+      // httpErrorHandle(
+      //   response: res,
+      //   context: context,
+      //   onSuccess: () {
+      //     for (int i = 0; i < jsonDecode(res.body).length; i++) {
+      //       favoriteList.add(
+      //         BookItem.fromJson(
+      //           jsonEncode(
+      //             jsonDecode(res.body)[i],
+      //           ),
+      //         ),
+      //       );
+      //     }
+      //   },
+      // );
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+    return favoriteList;
   }
+
+  Future<List<Order>> fetchUserOrders(
+      BuildContext context, String token) async {
+    List<Order> orderList = [];
+    try {
+      http.Response res =
+          await http.get(Uri.parse('$uriCuaKhoa/order/get'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer $token"
+      });
+
+      if (res.statusCode == 200) {
+        for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          orderList.add(
+            Order.fromJson(
+              jsonEncode(
+                jsonDecode(res.body)[i],
+              ),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      throw e;
+    }
+    return orderList;
+  }
+
+  Future<void> logout(BuildContext context) async {
+    Provider.of<UserProvider>(context, listen: false).clear();
+    Provider.of<FavoriteListProvider>(context, listen: false).clear();
+    Provider.of<OrderListProvider>(context, listen: false).clear();
+  }
+
+  // Future<void> getUserData({
+  //   required BuildContext context,
+  // }) async {
+  //   try {
+  //     // SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     // String? token = prefs.getString('Authorization');
+
+  //     //log(response);
+
+  //     http.Response userResponse = await http.get(
+  //       Uri.parse('https://8b6c-171-252-155-251.ap.ngrok.io/'),
+  //       headers: <String, String>{
+  //         "Content-Type": "application/json; charset=UTF-8",
+  //         "x-auth-token": ''
+  //       },
+  //     ).timeout(
+  //       const Duration(
+  //         seconds: 10,
+  //       ),
+  //     );
+
+  //     var userProvider = Provider.of<UserProvider>(context, listen: false);
+  //     userProvider.setUser(userResponse.body);
+  //   } on TimeoutException catch (_) {
+  //   } catch (e) {
+  //     showSnackBar(context, e.toString());
+  //   }
+  // }
 }

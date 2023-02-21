@@ -6,12 +6,31 @@ import 'package:grocery_app/styles/colors.dart';
 import 'navigator_item.dart';
 
 class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({
+    super.key,
+  });
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void callback(int newIndex) {
+    setState(() {
+      currentIndex = newIndex;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +45,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         transitionCurve: Curves.fastOutSlowIn,
         transitionDuration: const Duration(milliseconds: 700),
       ),
-
-      //navigatorItems[currentIndex].screen,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(

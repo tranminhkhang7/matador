@@ -1,19 +1,61 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:grocery_app/models/genre.dart';
 import 'package:grocery_app/models/grocery_item.dart';
+import 'package:grocery_app/providers/user_provider.dart';
 import 'package:grocery_app/screens/home/search_delegate.dart';
 import 'package:grocery_app/screens/product_details/product_details_screen.dart';
+import 'package:grocery_app/services/books_services.dart';
 import 'package:grocery_app/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grocery_app/widgets/grocery_item_card_widget.dart';
-import 'package:grocery_app/widgets/search_bar_widget.dart';
-
-import 'grocery_featured_Item_widget.dart';
 import 'package:grocery_app/widgets/custom_carousel.dart';
 import 'package:grocery_app/widgets/home_categories.dart';
+import 'package:grocery_app/widgets/loader.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  BooksService booksService = BooksService();
+  late Completer<List<Genre>> _genresCompleter;
+  List<Genre> genreList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _genresCompleter = Completer<List<Genre>>();
+    getGenres();
+  }
+
+  // getGenres() async {
+  //   if (mounted) {
+  //     genreList = await booksService.fetchGenres(context);
+  //     setState(() {});
+  //   }
+  // }
+  getGenres() async {
+    if (!_genresCompleter.isCompleted) {
+      try {
+        List<Genre> genres = await booksService.fetchGenres(context);
+        if (!_genresCompleter.isCompleted) {
+          _genresCompleter.complete(genres);
+        }
+      } catch (e) {
+        if (!_genresCompleter.isCompleted) {
+          _genresCompleter.completeError(e);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<UserProvider>().account;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -28,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  padded(locationWidget()),
+                  padded(locationWidget(user.name)),
                   SizedBox(
                     height: 15,
                   ),
@@ -55,59 +97,43 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    // TextFormField(
-                    //   onFieldSubmitted: (value) {},
-                    //   decoration: InputDecoration(
-                    //     prefixIcon: InkWell(
-                    //       onTap: () {},
-                    //       child: const Padding(
-                    //         padding: EdgeInsets.only(left: 6),
-                    //         child: Icon(
-                    //           Icons.search,
-                    //           color: Colors.black,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     filled: true,
-                    //     contentPadding: const EdgeInsets.only(
-                    //       top: 10,
-                    //     ),
-                    //     hintText: 'Search for your books',
-                    //     hintStyle: const TextStyle(
-                    //       fontWeight: FontWeight.w500,
-                    //       fontSize: 17,
-                    //     ),
-                    //   ),
-                    // ),
                   ),
                   SizedBox(
                     height: 25,
                   ),
-                  CarouselWidget(
-                    images: [
-                      'assets/images/carousel1.jpg',
-                      'assets/images/carousel2.jpg',
-                      'assets/images/carousel3.jpg',
-                      'assets/images/carousel4.jpg',
-                      'assets/images/carousel5.jpg',
-                    ],
-                  ),
-                  SizedBox(
-                    height: 200,
-                    child: CategoryGridView(
-                      icons: [
-                        'assets/icons/genre20.jpg',
-                        'assets/icons/genre28.jpg',
-                        'assets/icons/genre22.jpg',
-                        'assets/icons/genre30.jpg',
-                        'assets/icons/genre12.jpg',
-                        'assets/icons/genre13.jpg',
-                        'assets/icons/genre8.jpg',
-                        'assets/icons/genre21.jpg',
-                        'assets/icons/genre26.jpg',
-                        'assets/icons/genre17.jpg',
-                      ],
-                    ),
+                  // CarouselWidget(
+                  //   images: [
+                  //     'assets/images/carousel1.jpg',
+                  //     'assets/images/carousel2.jpg',
+                  //     'assets/images/carousel3.jpg',
+                  //     'assets/images/carousel4.jpg',
+                  //     'assets/images/carousel5.jpg',
+                  //   ],
+                  // ),
+
+                  FutureBuilder(
+                    future: _genresCompleter.future,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return SizedBox(
+                          height: 200,
+                          child: CategoryGridView(
+                            icons: [
+                              'assets/icons/genre_icons/genre20.svg',
+                              'assets/icons/genre_icons/genre28.svg',
+                              'assets/icons/genre_icons/genre22.svg',
+                              'assets/icons/genre_icons/genre30.svg',
+                              'assets/icons/genre_icons/genre12.svg',
+                              'assets/icons/genre_icons/genre13.svg',
+                              'assets/icons/genre_icons/genre8.svg',
+                            ],
+                            genres: snapshot.data!,
+                          ),
+                        );
+                      } else {
+                        return SizedBox(height: 200, child: const Loader());
+                      }
+                    },
                   ),
                   SizedBox(
                     height: 25,
@@ -233,7 +259,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget locationWidget() {
+  Widget locationWidget(String address) {
     String locationIconPath = "assets/icons/location_icon.svg";
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -245,7 +271,7 @@ class HomeScreen extends StatelessWidget {
           width: 8,
         ),
         Text(
-          "Khartoum,Sudan",
+          address,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         )
       ],

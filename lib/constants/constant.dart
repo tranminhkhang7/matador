@@ -1,5 +1,5 @@
 String uri = 'http://192.168.101.35:8080';
-String uriCuaKhoa = "https://912f-118-69-233-166.ap.ngrok.io";
+String uriCuaKhoa = "https://2bd4-171-252-155-251.ap.ngrok.io";
 List<Map<String, dynamic>> bookItems = [
   {
     'id': 1,
@@ -62,3 +62,11 @@ List<Map<String, dynamic>> bookItems = [
     'title': 'abc',
   },
 ];
+
+// List<BookItem> bookItemList = [
+//   BookItem.fromMap(bookItems[1]),
+//   BookItem.fromMap(bookItems[2]),
+//   BookItem.fromMap(bookItems[3]),
+//   BookItem.fromMap(bookItems[4]),
+//   BookItem.fromMap(bookItems[5]),
+// ];

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/common_widgets/app_textfield.dart';
-import 'package:grocery_app/models/account.dart';
 import 'package:grocery_app/services/auth_service.dart';
 import 'package:grocery_app/styles/colors.dart';
 
@@ -60,14 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen>
     setState(() {
       _isLoading = false;
     });
-    //navigateToBottomBar(account);
   }
-
-  // void navigateToBottomBar(Account account) {
-  //   if (account.email != '' && account.password != '') {
-  //     widget.callback!(1);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

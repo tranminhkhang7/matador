@@ -8,6 +8,7 @@ class UserProvider extends ChangeNotifier {
     token: '',
     name: '',
     gender: '',
+    birthDate: null,
   );
   Account get account => _account;
   void setUser(String user) {
@@ -18,5 +19,16 @@ class UserProvider extends ChangeNotifier {
   void setUserFromModel(Account user) {
     _account = user;
     notifyListeners();
+  }
+
+  void clear() {
+    _account = Account(
+      email: '',
+      password: '',
+      token: '',
+      name: '',
+      gender: '',
+      birthDate: null,
+    );
   }
 }
