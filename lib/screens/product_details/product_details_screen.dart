@@ -72,7 +72,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         fontWeight: FontWeight.w600,
                         color: Color(0xff7C7C7C),
                       ),
-                      trailing: FavoriteToggleIcon(),
+                      trailing: FavoriteToggleIcon(id: 1, isFavorite: false),
                     ),
                     Spacer(),
                     Row(
@@ -83,6 +83,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               amount = newAmount;
                             });
                           },
+                          quantity: amount,
                         ),
                         Spacer(),
                         Text(

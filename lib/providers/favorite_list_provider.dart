@@ -8,9 +8,11 @@ class FavoriteListProvider extends ChangeNotifier {
 
   void setFavoriteList(List<BookItem> list) {
     _favoriteList = list;
+    notifyListeners();
   }
 
   void clear() {
     _favoriteList = [];
+    notifyListeners();
   }
 }

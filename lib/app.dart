@@ -20,10 +20,8 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (settings) => generateRoutes(settings),
       home: Builder(builder: (context) {
         return FutureBuilder(
-          future: authService.signInUser(
-              context: context,
-              email: 'minhkhoa2706@gmail.com',
-              password: '123'),
+          future:
+              authService.signInUser(context: context, email: '', password: ''),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return SplashScreen();

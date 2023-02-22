@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
 import 'package:grocery_app/models/grocery_item.dart';
@@ -6,8 +8,10 @@ import 'package:grocery_app/styles/colors.dart';
 import 'item_counter_widget.dart';
 
 class ChartItemWidget extends StatefulWidget {
-  ChartItemWidget({Key? key, required this.item}) : super(key: key);
+  ChartItemWidget({Key? key, required this.item, required this.quantity})
+      : super(key: key);
   final GroceryItem item;
+  final int quantity;
 
   @override
   _ChartItemWidgetState createState() => _ChartItemWidgetState();
@@ -20,7 +24,12 @@ class _ChartItemWidgetState extends State<ChartItemWidget> {
 
   final double borderRadius = 18;
 
-  int amount = 1;
+  late int amount;
+  @override
+  void initState() {
+    amount = widget.quantity;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +64,13 @@ class _ChartItemWidgetState extends State<ChartItemWidget> {
                 SizedBox(
                   height: 12,
                 ),
-                Spacer(),
                 ItemCounterWidget(
                   onAmountChanged: (newAmount) {
                     setState(() {
                       amount = newAmount;
                     });
                   },
+                  quantity: amount,
                 )
               ],
             ),
@@ -96,7 +105,7 @@ class _ChartItemWidgetState extends State<ChartItemWidget> {
   Widget imageWidget() {
     return Container(
       width: 75,
-      child: Image.asset(
+      child: Image.network(
         widget.item.imagePath,
         fit: BoxFit.contain,
       ),

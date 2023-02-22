@@ -12,8 +12,8 @@ class BookItemCardWidget extends StatelessWidget {
   final BookItem item;
   final String? heroSuffix;
 
-  final double width = 174;
-  final double height = 250;
+  final double width = 224;
+  final double height = 300;
   final Color borderColor = Color(0xffE2E2E2);
   final double borderRadius = 18;
   String generateRandomString(int len) {
@@ -60,7 +60,7 @@ class BookItemCardWidget extends StatelessWidget {
               height: 20,
             ),
             AppText(
-              text: item.bookId.toString(),
+              text: item.title,
               fontSize: 16,
               fontWeight: FontWeight.bold,
               maxLines: 1,
@@ -110,10 +110,12 @@ class BookItemCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(17),
           color: AppColors.primaryColor),
       child: Center(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 25,
+        child: InkWell(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 25,
+          ),
         ),
       ),
     );

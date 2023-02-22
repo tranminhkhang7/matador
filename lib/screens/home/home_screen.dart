@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:grocery_app/helpers/snackbar.dart';
 import 'package:grocery_app/models/genre.dart';
 import 'package:grocery_app/models/grocery_item.dart';
 import 'package:grocery_app/providers/user_provider.dart';
@@ -22,14 +24,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   BooksService booksService = BooksService();
-  late Completer<List<Genre>> _genresCompleter;
-  List<Genre> genreList = [];
+  // late Completer<List<Genre>> _genresCompleter;
+  late Future<List<Genre>> genreList;
 
   @override
   void initState() {
     super.initState();
-    _genresCompleter = Completer<List<Genre>>();
-    getGenres();
+    //_genresCompleter = Completer<List<Genre>>();
+    //getGenres();
+    genreList = booksService.fetchGenres(context);
   }
 
   // getGenres() async {
@@ -38,20 +41,21 @@ class _HomeScreenState extends State<HomeScreen> {
   //     setState(() {});
   //   }
   // }
-  getGenres() async {
-    if (!_genresCompleter.isCompleted) {
-      try {
-        List<Genre> genres = await booksService.fetchGenres(context);
-        if (!_genresCompleter.isCompleted) {
-          _genresCompleter.complete(genres);
-        }
-      } catch (e) {
-        if (!_genresCompleter.isCompleted) {
-          _genresCompleter.completeError(e);
-        }
-      }
-    }
-  }
+  // getGenres() async {
+  //   if (!_genresCompleter.isCompleted) {
+  //     try {
+  //       List<Genre> genres = await booksService.fetchGenres(context);
+  //       if (!_genresCompleter.isCompleted) {
+  //         _genresCompleter.complete(genres);
+  //         log('hehe');
+  //       }
+  //     } catch (e) {
+  //       if (!_genresCompleter.isCompleted) {
+  //         _genresCompleter.completeError(e);
+  //       }
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,11 +116,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   // ),
 
                   FutureBuilder(
-                    future: _genresCompleter.future,
+                    future: genreList,
                     builder: (context, snapshot) {
-                      if (snapshot.hasData) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
                         return SizedBox(
                           height: 200,
+                          width: MediaQuery.of(context).size.width,
                           child: CategoryGridView(
                             icons: [
                               'assets/icons/genre_icons/genre20.svg',
@@ -135,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                   ),
+
                   SizedBox(
                     height: 25,
                   ),
@@ -149,38 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 15,
                   ),
                   padded(subTitle("Sách Mới")),
-                  // SizedBox(
-                  //   height: 15,
-                  // ),
-                  // Container(
-                  //   height: 105,
-                  //   child: ListView(
-                  //     padding: EdgeInsets.zero,
-                  //     scrollDirection: Axis.horizontal,
-                  //     children: [
-                  //       SizedBox(
-                  //         width: 20,
-                  //       ),
-                  //       GroceryFeaturedCard(
-                  //         groceryFeaturedItems[0],
-                  //         color: Color(0xffF8A44C),
-                  //       ),
-                  //       SizedBox(
-                  //         width: 20,
-                  //       ),
-                  //       GroceryFeaturedCard(
-                  //         groceryFeaturedItems[1],
-                  //         color: AppColors.primaryColor,
-                  //       ),
-                  //       SizedBox(
-                  //         width: 20,
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 15,
-                  // ),
                   getHorizontalItemSlider(groceries),
                   SizedBox(
                     height: 15,
@@ -242,18 +217,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget subTitle(String text) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           text,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        Spacer(),
-        Text(
-          "Xem thêm",
-          style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryColor),
+        GestureDetector(
+          onTap: () {},
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'See more',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+              SizedBox(width: 4.0),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16.0,
+                color: AppColors.primaryColor,
+              ),
+            ],
+          ),
         ),
       ],
     );

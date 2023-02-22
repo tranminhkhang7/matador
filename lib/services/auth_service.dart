@@ -10,9 +10,8 @@ import 'package:grocery_app/helpers/snackbar.dart';
 import 'package:grocery_app/models/account.dart';
 import 'package:grocery_app/models/book_item.dart';
 import 'package:grocery_app/models/order.dart';
-import 'package:grocery_app/providers/favorite_list_providers.dart';
+import 'package:grocery_app/providers/favorite_list_provider.dart';
 import 'package:grocery_app/providers/order_list_provider.dart';
-import 'package:grocery_app/providers/search_list_provider.dart';
 import 'package:grocery_app/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -96,16 +95,11 @@ class AuthService {
               name: data['customerDetail']['name'],
             );
 
-            //user
-            var userProvider =
-                Provider.of<UserProvider>(context, listen: false);
-            userProvider.setUserFromModel(account);
-
             //favList
             var favBooksProvider =
                 Provider.of<FavoriteListProvider>(context, listen: false);
             favBooksProvider.setFavoriteList(
-              await fetchFavoriteBooks(context, account.email, account.token),
+              await fetchFavoriteBooks(context, account.token),
             );
 
             //orderList
@@ -113,7 +107,10 @@ class AuthService {
                 Provider.of<OrderListProvider>(context, listen: false);
             orderProvider.setOrderList(
               await fetchUserOrders(context, account.token),
-            );
+            ); //user
+            var userProvider =
+                Provider.of<UserProvider>(context, listen: false);
+            userProvider.setUserFromModel(account);
           },
         );
       }
@@ -125,59 +122,31 @@ class AuthService {
   }
 
   Future<List<BookItem>> fetchFavoriteBooks(
-      BuildContext context, String email, String token) async {
+      BuildContext context, String token) async {
     List<BookItem> favoriteList = [];
     try {
-      favoriteList.add(
-        BookItem(
-          bookId: 1,
-          author: 'Khoa',
-          description: 'des',
-          imageLink:
-              'https://www.google.com/photos/about/static/images/ui/logo-photos.png',
-          price: 3,
-          publisher: 'Khoa',
-          quantityLeft: '10',
-          status: 'available',
-          title: 'Book Test 1',
-        ),
+      http.Response res =
+          await http.get(Uri.parse('$uriCuaKhoa/favourite/retrieve'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer $token"
+      });
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            favoriteList.add(
+              BookItem.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
       );
-      favoriteList.add(
-        BookItem(
-          bookId: 2,
-          author: 'Khoa',
-          description: 'des',
-          imageLink:
-              'https://www.google.com/photos/about/static/images/ui/logo-photos.png',
-          price: 3,
-          publisher: 'Khoa',
-          quantityLeft: '10',
-          status: 'available',
-          title: 'Book Test 1',
-        ),
-      );
-      // http.Response res = await http.get(Uri.parse('$uri/book/listBook/'),
-      //     headers: {
-      //       'Content-Type': 'application/json; charset=UTF-8',
-      //       'Authorization': token
-      //     });
-      // httpErrorHandle(
-      //   response: res,
-      //   context: context,
-      //   onSuccess: () {
-      //     for (int i = 0; i < jsonDecode(res.body).length; i++) {
-      //       favoriteList.add(
-      //         BookItem.fromJson(
-      //           jsonEncode(
-      //             jsonDecode(res.body)[i],
-      //           ),
-      //         ),
-      //       );
-      //     }
-      //   },
-      // );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      rethrow;
     }
     return favoriteList;
   }
@@ -204,7 +173,7 @@ class AuthService {
         }
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
     return orderList;
   }

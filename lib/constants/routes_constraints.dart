@@ -7,4 +7,6 @@ class RoutesHandler {
   static const String USER_PROFILE = '/user-profile';
   static const String CATEGORY_PRODUCTS = '/category-products';
   static const String ORDERS = '/orders';
+  static const String ORDER_DETAILS = '/order-details';
+  static const String COMMENT = '/comment';
 }

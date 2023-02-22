@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 
 import 'package:grocery_app/common_widgets/app_button.dart';
 import 'package:grocery_app/common_widgets/app_text.dart';
+import 'package:grocery_app/common_widgets/stars.dart';
 
 import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/models/book_item.dart';
+import 'package:grocery_app/providers/favorite_list_provider.dart';
 
 import 'package:grocery_app/widgets/book_item_card_widget.dart';
 
 import 'package:grocery_app/widgets/item_counter_widget.dart';
+import 'package:provider/provider.dart';
 
 import 'favourite_toggle_icon_widget.dart';
 
 class BookDetailScreen extends StatefulWidget {
   final BookItem bookItem;
   final String? heroSuffix;
-
   const BookDetailScreen({
     Key? key,
     required this.bookItem,
@@ -27,6 +29,69 @@ class BookDetailScreen extends StatefulWidget {
 }
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
+  List<BookItem> mockList = [
+    BookItem(
+      bookId: 1,
+      author: 'Khoa',
+      description: 'Khoa',
+      imageLink:
+          'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
+      price: 2,
+      publisher: 'Khoa',
+      quantityLeft: '15',
+      status: 'active',
+      title: 'Book test',
+    ),
+    BookItem(
+      bookId: 2,
+      author: 'Khoa',
+      description: 'Khoa',
+      imageLink:
+          'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
+      price: 2,
+      publisher: 'Khoa',
+      quantityLeft: '15',
+      status: 'active',
+      title: 'Book test',
+    ),
+    BookItem(
+      bookId: 3,
+      author: 'Khoa',
+      description: 'Khoa',
+      imageLink:
+          'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
+      price: 2,
+      publisher: 'Khoa',
+      quantityLeft: '15',
+      status: 'active',
+      title: 'Book test',
+    ),
+    BookItem(
+      bookId: 4,
+      author: 'Khoa',
+      description: 'Khoa',
+      imageLink:
+          'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
+      price: 2,
+      publisher: 'Khoa',
+      quantityLeft: '15',
+      status: 'active',
+      title: 'Book test',
+    ),
+    BookItem(
+      bookId: 5,
+      author: 'Khoa',
+      description: 'Khoa',
+      imageLink:
+          'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
+      price: 2,
+      publisher: 'Khoa',
+      quantityLeft: '15',
+      status: 'active',
+      title: 'Book test',
+    ),
+  ];
+
   int amount = 1;
   // List<BookItem> mockList = bookItemList;
   @override
@@ -34,122 +99,135 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     super.initState();
   }
 
+  void navigateToReviewScreen() {
+    Navigator.pushNamed(
+      context,
+      RoutesHandler.COMMENT,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final favProvider = context.watch<FavoriteListProvider>().favoriteList;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            padding: EdgeInsets.only(left: 25),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-                right: 8,
-              ),
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              padding: EdgeInsets.only(left: 25),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 8,
+                  right: 8,
+                ),
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
-        ),
-        title: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 25,
+          title: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 25,
+            ),
+            child: AppText(
+              text: widget.bookItem.title,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              maxLines: 1,
+              textOverflow: TextOverflow.ellipsis,
+            ),
           ),
-          child: AppText(
-            text: widget.bookItem.title,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            maxLines: 1,
-            textOverflow: TextOverflow.ellipsis,
-          ),
         ),
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraint) => SingleChildScrollView(
-            child: ConstrainedBox(
-          constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height * 1.2),
-          child: IntrinsicHeight(
-            child: Column(
-              children: [
-                getImageHeaderWidget(),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Column(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              getImageHeaderWidget(),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        widget.bookItem.title,
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: AppText(
+                        text: widget.bookItem.description,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xff7C7C7C),
+                        maxLines: 5,
+                      ),
+                      trailing: FavoriteToggleIcon(
+                        id: widget.bookItem.bookId,
+                        isFavorite: favProvider.contains(widget.bookItem),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            widget.bookItem.title,
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                        ItemCounterWidget(
+                          onAmountChanged: (newAmount) {
+                            setState(() {
+                              amount = newAmount;
+                            });
+                          },
+                          quantity: amount,
+                        ),
+                        Text(
+                          "\$${getTotalPrice().toStringAsFixed(2)}",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
-                          subtitle: AppText(
-                            text: widget.bookItem.description,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff7C7C7C),
-                            maxLines: 5,
-                          ),
-                          trailing: FavoriteToggleIcon(),
                         ),
-                        Spacer(),
-                        Row(
-                          children: [
-                            ItemCounterWidget(
-                              onAmountChanged: (newAmount) {
-                                setState(() {
-                                  amount = newAmount;
-                                });
-                              },
-                            ),
-                            Spacer(),
-                            Text(
-                              "\$${getTotalPrice().toStringAsFixed(2)}",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(thickness: 1),
-                        // getHorizontalItemSlider(mockList),
-                        Divider(thickness: 1),
-                        getProductDataRowWidget("Product Details"),
-                        Divider(thickness: 1),
-                        getProductDataRowWidget(
-                          "Review",
-                          customWidget: ratingWidget(),
-                        ),
-                        Spacer(),
-                        AppButton(
-                          label: "Add To Basket",
-                        ),
-                        Spacer(),
-                        Spacer(),
                       ],
                     ),
-                  ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    getHorizontalItemSlider(mockList),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Divider(thickness: 1),
+                    getProductDataRowWidget("Product Details"),
+                    Divider(thickness: 1),
+                    GestureDetector(
+                      onTap: () => navigateToReviewScreen(),
+                      child: getProductDataRowWidget(
+                        "Review",
+                        customWidget: ratingWidget(),
+                      ),
+                    ),
+                    Divider(thickness: 1),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    AppButton(
+                      label: "Add To Basket",
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              )
+            ],
           ),
-        )),
-      ),
-    );
+        ));
   }
 
   void navigateToBookDetailScreen(BookItem b) {
@@ -251,14 +329,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       );
     }
 
-    return Row(
-      children: [
-        starIcon(),
-        starIcon(),
-        starIcon(),
-        starIcon(),
-        starIcon(),
-      ],
+    return Stars(
+      rating: 4.5,
     );
   }
 

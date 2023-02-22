@@ -7,8 +7,10 @@ import 'package:grocery_app/screens/account/account_screen.dart';
 import 'package:grocery_app/screens/category/category_screen.dart';
 import 'package:grocery_app/screens/dashboard/dashboard_screen.dart';
 import 'package:grocery_app/screens/order/screens/orders_screen.dart';
+import 'package:grocery_app/screens/order_details/order_details_screen.dart';
 import 'package:grocery_app/screens/product_details/book_detail_screen.dart';
 import 'package:grocery_app/screens/profile/user_profile.dart';
+import 'package:grocery_app/screens/review/review_screen.dart';
 import 'package:grocery_app/screens/search/search_all_screen.dart';
 
 Route<dynamic> generateRoutes(RouteSettings routeSettings) {
@@ -49,6 +51,18 @@ Route<dynamic> generateRoutes(RouteSettings routeSettings) {
       return (FadeRoute(
         page: OrdersScreen(),
       ));
+    case RoutesHandler.ORDER_DETAILS:
+      var orderId = routeSettings.arguments as int;
+      return (FadeRoute(
+        page: OrderDetailsScreen(
+          orderId: orderId,
+        ),
+      ));
+    case RoutesHandler.COMMENT:
+      return (FadeRoute(
+        page: ReviewScreen(),
+      ));
+
     default:
       return MaterialPageRoute(
         settings: routeSettings,

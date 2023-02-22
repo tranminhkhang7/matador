@@ -7,9 +7,11 @@ class OrderListProvider extends ChangeNotifier {
   List<Order> get ordersProvider => _ordersProvider;
   void setOrderList(List<Order> list) {
     _ordersProvider = list;
+    notifyListeners();
   }
 
   void clear() {
     _ordersProvider = [];
+    notifyListeners();
   }
 }

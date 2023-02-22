@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/providers/order_list_provider.dart';
 import 'package:grocery_app/screens/order/widgets/order_widget.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,14 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
+  void navigateToOrderDetails(int orderId) {
+    Navigator.pushNamed(
+      context,
+      RoutesHandler.ORDER_DETAILS,
+      arguments: orderId,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final orders = context.read<OrderListProvider>().ordersProvider;
@@ -24,14 +33,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
           final order = orders[index];
-          return OrderWidget(
-            orderNumber: (index + 1).toString(),
-            orderDate: DateFormat('dd/MM/y h:mm a').format(
-              order.time,
+          return GestureDetector(
+            onTap: () => navigateToOrderDetails(
+              order.id,
             ),
-            orderStatus: order.status,
-            orderTotal: order.totalAmount.toString(),
-            address: order.address,
+            child: OrderWidget(
+              orderNumber: order.id.toString(),
+              //(index + 1).toString(),
+              orderDate: DateFormat('dd/MM/y h:mm a').format(
+                order.time,
+              ),
+              orderStatus: order.status,
+              orderTotal: order.totalAmount.toString(),
+              address: order.address,
+            ),
           );
         },
       ),

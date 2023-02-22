@@ -6,9 +6,20 @@ import 'package:grocery_app/widgets/chart_item_widget.dart';
 
 import 'checkout_bottom_sheet.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
+    double sum = 0;
+
+    demoItems.forEach(
+      ((element) => sum += element.quantity * element.price),
+    );
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -35,6 +46,7 @@ class CartScreen extends StatelessWidget {
                       width: double.maxFinite,
                       child: ChartItemWidget(
                         item: e,
+                        quantity: e.quantity,
                       ),
                     );
                   }).toList(),
@@ -51,7 +63,7 @@ class CartScreen extends StatelessWidget {
               Divider(
                 thickness: 1,
               ),
-              getCheckoutButton(context)
+              getCheckoutButton(context, sum)
             ],
           ),
         ),
@@ -59,14 +71,14 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Widget getCheckoutButton(BuildContext context) {
+  Widget getCheckoutButton(BuildContext context, double totalPrice) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       child: AppButton(
         label: "Go To Check Out",
         fontWeight: FontWeight.w600,
         padding: EdgeInsets.symmetric(vertical: 30),
-        trailingWidget: getButtonPriceWidget(),
+        trailingWidget: getButtonPriceWidget(totalPrice),
         onPressed: () {
           showBottomSheet(context);
         },
@@ -74,7 +86,7 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Widget getButtonPriceWidget() {
+  Widget getButtonPriceWidget(double totalPrice) {
     return Container(
       padding: EdgeInsets.all(2),
       decoration: BoxDecoration(
@@ -82,7 +94,7 @@ class CartScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        "\$12.96",
+        "\$${totalPrice.toString()}",
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
     );

@@ -3,11 +3,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/models/genre.dart';
 
-class CategoryGridView extends StatelessWidget {
+class CategoryGridView extends StatefulWidget {
   final List<String> icons;
   final List<Genre> genres;
   const CategoryGridView(
       {super.key, required this.icons, required this.genres});
+
+  @override
+  State<CategoryGridView> createState() => _CategoryGridViewState();
+}
+
+class _CategoryGridViewState extends State<CategoryGridView> {
   void navigateToCategoryScreen(BuildContext context, Genre genre) {
     Navigator.pushNamed(
       context,
@@ -24,10 +30,11 @@ class CategoryGridView extends StatelessWidget {
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           scrollDirection: Axis.horizontal,
-          itemCount: genres.length >= 8 ? 8 : genres.length,
+          itemCount: widget.genres.length >= 8 ? 8 : widget.genres.length,
           itemBuilder: (context, index) {
             return InkWell(
-              onTap: () => navigateToCategoryScreen(context, genres[index]),
+              onTap: () =>
+                  navigateToCategoryScreen(context, widget.genres[index]),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -39,7 +46,7 @@ class CategoryGridView extends StatelessWidget {
                     Container(
                       height: 40,
                       width: 40,
-                      child: SvgPicture.asset(icons[index]),
+                      child: SvgPicture.asset(widget.icons[index]),
                       // decoration: BoxDecoration(
                       //   shape: BoxShape.rectangle,
                       //   image: DecorationImage(
@@ -51,7 +58,7 @@ class CategoryGridView extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      genres[index].genreName,
+                      widget.genres[index].genreName,
                       style: const TextStyle(fontSize: 9),
                     ),
                   ],

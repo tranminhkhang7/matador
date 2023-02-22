@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 class Order {
+  final int id;
   final String address;
   final String phone;
   final String status;
   final DateTime time;
   final double totalAmount;
   Order({
+    required this.id,
     required this.address,
     required this.phone,
     required this.status,
@@ -15,6 +17,7 @@ class Order {
   });
 
   Order copyWith({
+    int? id,
     String? address,
     String? phone,
     String? status,
@@ -22,6 +25,7 @@ class Order {
     double? totalAmount,
   }) {
     return Order(
+      id: id ?? this.id,
       address: address ?? this.address,
       phone: phone ?? this.phone,
       status: status ?? this.status,
@@ -32,6 +36,7 @@ class Order {
 
   Map<String, dynamic> toMap() {
     return {
+      'orderId': id,
       'address': address,
       'phone': phone,
       'status': status,
@@ -42,6 +47,7 @@ class Order {
 
   factory Order.fromMap(Map<String, dynamic> map) {
     return Order(
+      id: map['orderId']?.toInt() ?? 0,
       address: map['address'] ?? '',
       phone: map['phone'] ?? '',
       status: map['status'] ?? '',
@@ -57,7 +63,7 @@ class Order {
 
   @override
   String toString() {
-    return 'Order(address: $address, phone: $phone, status: $status, time: $time, total_amount: $totalAmount)';
+    return 'Order(id: $id, address: $address, phone: $phone, status: $status, time: $time, totalAmount: $totalAmount)';
   }
 
   @override
@@ -65,6 +71,7 @@ class Order {
     if (identical(this, other)) return true;
 
     return other is Order &&
+        other.id == id &&
         other.address == address &&
         other.phone == phone &&
         other.status == status &&
@@ -74,7 +81,8 @@ class Order {
 
   @override
   int get hashCode {
-    return address.hashCode ^
+    return id.hashCode ^
+        address.hashCode ^
         phone.hashCode ^
         status.hashCode ^
         time.hashCode ^

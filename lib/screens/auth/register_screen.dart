@@ -147,7 +147,11 @@ class _RegisterScreenState extends State<RegisterScreen>
                         height: 50,
                       ),
                       AppButton(
-                        onPressed: () => signUpUser(),
+                        onPressed: () {
+                          if (_signUpFormKey.currentState!.validate()) {
+                            signUpUser();
+                          }
+                        },
                         label: "Đăng ký",
                         padding: const EdgeInsets.symmetric(vertical: 20),
                       ),

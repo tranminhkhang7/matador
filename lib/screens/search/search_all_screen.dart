@@ -26,7 +26,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List<BookItem> bookList = [];
   List<BookItem> displayBooks = [];
   BooksService searchBooksService = BooksService();
-
+  bool _isLoading = false;
   int page = 1;
   static final int _pageLimit = 6;
   @override
@@ -49,6 +49,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   fetchSearchProducts() async {
+    _isLoading = true;
     bookList = await searchBooksService.fetchSearchedProducts(
       context: context,
       searchQuery: widget.searchQuery,
@@ -59,6 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
         .take(_pageLimit)
         .toList();
     setState(() {});
+    _isLoading = false;
     //log(productList.toString());
   }
 
@@ -193,31 +195,37 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-      body: bookList.isEmpty
+      body: _isLoading == true
           ? const Loader()
-          : Scrollbar(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: StaggeredGrid.count(
-                  crossAxisCount: 2,
-                  children: displayBooks.map<Widget>((e) {
-                    BookItem bookItem = e;
-                    return GestureDetector(
-                      onTap: () => navigateToBookDetailScreen(bookItem),
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        child: BookItemCardWidget(
-                          item: bookItem,
-                          heroSuffix: "explore_screen",
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  mainAxisSpacing: 3.0,
-                  crossAxisSpacing: 0.0, // add some space
+          : bookList.isEmpty
+              ? const SizedBox(
+                  child: Center(
+                    child: const Text('Not Found'),
+                  ),
+                )
+              : Scrollbar(
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: StaggeredGrid.count(
+                      crossAxisCount: 2,
+                      children: displayBooks.map<Widget>((e) {
+                        BookItem bookItem = e;
+                        return GestureDetector(
+                          onTap: () => navigateToBookDetailScreen(bookItem),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: BookItemCardWidget(
+                              item: bookItem,
+                              heroSuffix: "explore_screen",
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      mainAxisSpacing: 3.0,
+                      crossAxisSpacing: 0.0, // add some space
+                    ),
+                  ),
                 ),
-              ),
-            ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_app/providers/favorite_list_providers.dart';
+import 'package:grocery_app/providers/favorite_list_provider.dart';
 import 'package:grocery_app/providers/order_list_provider.dart';
 import 'package:grocery_app/providers/search_list_provider.dart';
 import 'package:grocery_app/providers/user_provider.dart';

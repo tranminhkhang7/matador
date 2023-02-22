@@ -19,6 +19,10 @@ void httpErrorHandle({
     case 500:
       showSnackBar(context, jsonDecode(response.body)['error']);
       break;
+    case 403:
+    case 401:
+      showSnackBar(context, 'Session time out');
+      break;
     default:
       showSnackBar(context, (response.body));
   }

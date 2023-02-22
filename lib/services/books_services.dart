@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:grocery_app/constants/constant.dart';
@@ -7,6 +9,7 @@ import 'package:grocery_app/helpers/http_handler.dart';
 import 'package:grocery_app/helpers/snackbar.dart';
 import 'package:grocery_app/models/book_item.dart';
 import 'package:grocery_app/models/genre.dart';
+import 'package:grocery_app/providers/favorite_list_provider.dart';
 import 'package:grocery_app/providers/user_provider.dart';
 
 import 'package:http/http.dart' as http;
@@ -121,13 +124,15 @@ class BooksService {
         context: context,
         onSuccess: () {
           for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            genreList.add(
-              Genre.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
-              ),
-            );
+            genreList.add(Genre.fromMap(
+              jsonDecode(res.body)[i],
+            )
+                // Genre.fromJson(
+                //   jsonEncode(
+                //     jsonDecode(res.body)[i],
+                //   ),
+                // ),
+                );
           }
         },
       );
@@ -135,5 +140,71 @@ class BooksService {
       showSnackBar(context, e.toString());
     }
     return genreList;
+  }
+
+  Future<void> addToFavorite(BuildContext context, int bookId) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      log(userProvider.account.token);
+      http.Response res =
+          await http.post(Uri.parse('$uriCuaKhoa/favourite/$bookId'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${userProvider.account.token}',
+      });
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          List<BookItem> newFavList = [];
+          final favProvider =
+              Provider.of<FavoriteListProvider>(context, listen: false);
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            newFavList.add(
+              BookItem.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+          favProvider.setFavoriteList(newFavList);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  Future<void> deleteFromFavorite(BuildContext context, int bookId) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      log(userProvider.account.token);
+      http.Response res = await http
+          .delete(Uri.parse('$uriCuaKhoa/favourite/$bookId'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ${userProvider.account.token}',
+      });
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          List<BookItem> newFavList = [];
+          final favProvider =
+              Provider.of<FavoriteListProvider>(context, listen: false);
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            newFavList.add(
+              BookItem.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+          favProvider.setFavoriteList(newFavList);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
   }
 }

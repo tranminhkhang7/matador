@@ -52,11 +52,13 @@ class SearchBookDelegate extends SearchDelegate {
 
   @override
   void showResults(BuildContext context) {
+    super.showResults(context);
+
     Navigator.of(context).popAndPushNamed(
       RoutesHandler.SEARCH_ALL,
       arguments: query,
     );
-    super.showResults(context);
+    // close(context, query);
   }
 
   void navigateToBookDetailScreen(BookItem b, BuildContext context) {

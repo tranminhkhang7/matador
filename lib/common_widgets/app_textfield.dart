@@ -9,6 +9,7 @@ class AppTextField extends StatelessWidget {
   final Icon? prefixIcons;
   final IconButton? suffixIcon;
   final Function(String)? onChanged;
+  final String? label;
   const AppTextField({
     Key? key,
     required this.controller,
@@ -19,6 +20,7 @@ class AppTextField extends StatelessWidget {
     this.prefixIcons,
     this.suffixIcon,
     this.onChanged,
+    this.label,
   }) : super(key: key);
 
   @override
@@ -29,6 +31,7 @@ class AppTextField extends StatelessWidget {
       controller: controller,
       keyboardType: inputType,
       decoration: InputDecoration(
+        labelText: label,
         prefixIcon: prefixIcons,
         suffixIcon: suffixIcon,
         contentPadding: const EdgeInsets.only(

@@ -41,6 +41,10 @@ class _FiltersDrawerState extends State<FiltersDrawer> {
                 _maxPrice = values.end;
               });
             },
+            labels: RangeLabels(
+              _minPrice.toStringAsFixed(1),
+              widget.maxPrice.toStringAsFixed(1),
+            ),
           ),
           ListTile(
             title: Text('Category'),
