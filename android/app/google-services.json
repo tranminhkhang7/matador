@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "144057703731",
+    "project_id": "matador-36a30",
+    "storage_bucket": "matador-36a30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144057703731:android:aab45cd4803291393cb246",
+        "android_client_info": {
+          "package_name": "com.example.grocery_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144057703731-7ghv9u27baif6a199hho365pqhovhv4u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUUL5mR9MMPZo7EXzrDRDGawX50e0fctQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144057703731-7ghv9u27baif6a199hho365pqhovhv4u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

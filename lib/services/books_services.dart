@@ -19,19 +19,18 @@ class BooksService {
   Future<List<BookItem>> fetchSearchedProducts({
     required BuildContext context,
     required String searchQuery,
+    int pageNo = 0,
+    int pageSize = 6,
   }) async {
     List<BookItem> bookList = [];
     try {
       http.Response res = await http.get(
-          Uri.parse('$uriCuaKhoa/book/search?query=$searchQuery'),
+          Uri.parse(
+              '$uriCuaKhoa/book/search?query=$searchQuery&pageNo=$pageNo&pageSize=$pageSize'),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             //'Authorization': 'Bearer ${userProvider.account.token}',
-          }).timeout(
-        const Duration(
-          seconds: 4,
-        ),
-      );
+          });
 
       httpErrorHandle(
         response: res,
@@ -47,6 +46,11 @@ class BooksService {
             );
           }
         },
+      );
+    } on SocketException catch (e) {
+      showSnackBar(
+        context,
+        'Connection refuse $e',
       );
     } catch (e) {
       showSnackBar(context, e.toString());
@@ -126,13 +130,7 @@ class BooksService {
           for (int i = 0; i < jsonDecode(res.body).length; i++) {
             genreList.add(Genre.fromMap(
               jsonDecode(res.body)[i],
-            )
-                // Genre.fromJson(
-                //   jsonEncode(
-                //     jsonDecode(res.body)[i],
-                //   ),
-                // ),
-                );
+            ));
           }
         },
       );

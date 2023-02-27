@@ -7,7 +7,7 @@ class BookItem {
   final String imageLink;
   final double price;
   final String publisher;
-  final String quantityLeft;
+  final int quantityLeft;
   final String status;
   final String title;
   BookItem({
@@ -29,7 +29,7 @@ class BookItem {
     String? imageLink,
     double? price,
     String? publisher,
-    String? quantityLeft,
+    int? quantityLeft,
     String? status,
     String? title,
   }) {
@@ -68,7 +68,7 @@ class BookItem {
       imageLink: map['imageLink'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,
       publisher: map['publisher'] ?? '',
-      quantityLeft: map['quantityLeft'] ?? '',
+      quantityLeft: map['quantityLeft']?.toInt() ?? 0,
       status: map['status'] ?? '',
       title: map['title'] ?? '',
     );
@@ -81,7 +81,7 @@ class BookItem {
 
   @override
   String toString() {
-    return 'BookItem(id: $bookId, author: $author, description: $description, imageLink: $imageLink, price: $price, publisher: $publisher, quantityLeft: $quantityLeft, status: $status, title: $title)';
+    return 'BookItem(bookId: $bookId, author: $author, description: $description, imageLink: $imageLink, price: $price, publisher: $publisher, quantityLeft: $quantityLeft, status: $status, title: $title)';
   }
 
   @override

@@ -10,9 +10,11 @@ import 'package:grocery_app/helpers/snackbar.dart';
 import 'package:grocery_app/models/account.dart';
 import 'package:grocery_app/models/book_item.dart';
 import 'package:grocery_app/models/order.dart';
+import 'package:grocery_app/providers/cart_provider.dart';
 import 'package:grocery_app/providers/favorite_list_provider.dart';
 import 'package:grocery_app/providers/order_list_provider.dart';
 import 'package:grocery_app/providers/user_provider.dart';
+import 'package:grocery_app/services/cart_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,8 +78,6 @@ class AuthService {
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-        ).timeout(
-          const Duration(seconds: 5),
         );
 
         httpErrorHandle(
@@ -93,6 +93,8 @@ class AuthService {
               birthDate: DateTime.parse(data['customerDetail']['birthday']),
               gender: data['customerDetail']['gender'],
               name: data['customerDetail']['name'],
+              address: data['customerDetail']['address'],
+              phone: data['customerDetail']['phone'],
             );
 
             //favList
@@ -107,7 +109,15 @@ class AuthService {
                 Provider.of<OrderListProvider>(context, listen: false);
             orderProvider.setOrderList(
               await fetchUserOrders(context, account.token),
-            ); //user
+            );
+
+            //cart
+            var cartProvider =
+                Provider.of<CartProvider>(context, listen: false);
+            cartProvider.setCartItemList(
+              await CartServices().getCart(context, account.token),
+            );
+            //user
             var userProvider =
                 Provider.of<UserProvider>(context, listen: false);
             userProvider.setUserFromModel(account);
@@ -182,6 +192,7 @@ class AuthService {
     Provider.of<UserProvider>(context, listen: false).clear();
     Provider.of<FavoriteListProvider>(context, listen: false).clear();
     Provider.of<OrderListProvider>(context, listen: false).clear();
+    Provider.of<CartProvider>(context, listen: false).clear();
   }
 
   // Future<void> getUserData({

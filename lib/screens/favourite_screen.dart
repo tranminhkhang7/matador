@@ -8,6 +8,7 @@ import 'package:grocery_app/providers/favorite_list_provider.dart';
 
 import 'package:grocery_app/providers/user_provider.dart';
 import 'package:grocery_app/services/books_services.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class FavouriteScreen extends StatefulWidget {
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
   BooksService booksService = BooksService();
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -30,9 +32,14 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     );
   }
 
-  void removeFromFavorite(int id) {
-    booksService.deleteFromFavorite(context, id);
-    setState(() {});
+  void removeFromFavorite(int id) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await booksService.deleteFromFavorite(context, id);
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -53,88 +60,92 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     color: Color(0xFF7C7C7C),
                   ),
                 )
-              : ListView.builder(
-                  itemCount: favList.length,
-                  itemBuilder: (context, index) {
-                    BookItem bookItem = favList[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Image.network(
-                                bookItem.imageLink,
-                                width: 80,
-                                height: 120,
-                                fit: BoxFit.fitHeight,
+              : ModalProgressHUD(
+                  inAsyncCall: _isLoading,
+                  child: ListView.builder(
+                    itemCount: favList.length,
+                    itemBuilder: (context, index) {
+                      BookItem bookItem = favList[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: Image.network(
+                                  bookItem.imageLink,
+                                  width: 80,
+                                  height: 120,
+                                  fit: BoxFit.fitHeight,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      bookItem.title,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        bookItem.title,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: 2,
                                       ),
-                                      maxLines: 2,
-                                    ),
-                                    SizedBox(height: 12),
-                                    Text(
-                                      bookItem.description,
-                                      style: TextStyle(fontSize: 16),
-                                      maxLines: 2,
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "Author: ${bookItem.author}",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic,
+                                      SizedBox(height: 12),
+                                      Text(
+                                        bookItem.description,
+                                        style: TextStyle(fontSize: 16),
+                                        maxLines: 2,
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        "Author: ${bookItem.author}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 120,
+                                width: 50,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Icon(
+                                    //   Icons.arrow_forward_ios,
+                                    // ),
+                                    // SizedBox(
+                                    //   height: 12,
+                                    // ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        removeFromFavorite(bookItem.bookId);
+                                        // favList.removeWhere((element) =>
+                                        //     element.bookId == bookItem.bookId);
+                                      },
+                                      child: Icon(
+                                        Icons.favorite_outlined,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 120,
-                              width: 50,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Icon(
-                                  //   Icons.arrow_forward_ios,
-                                  // ),
-                                  // SizedBox(
-                                  //   height: 12,
-                                  // ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      removeFromFavorite(bookItem.bookId);
-                                      // favList.removeWhere((element) =>
-                                      //     element.bookId == bookItem.bookId);
-                                    },
-                                    child: Icon(
-                                      Icons.favorite_outlined,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
     );
   }

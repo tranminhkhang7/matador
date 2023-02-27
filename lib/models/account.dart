@@ -8,6 +8,8 @@ class Account {
   final String name;
   final String gender;
   final DateTime? birthDate;
+  final String address;
+  final String phone;
   Account({
     required this.email,
     required this.password,
@@ -15,6 +17,8 @@ class Account {
     required this.name,
     required this.gender,
     required this.birthDate,
+    required this.address,
+    required this.phone,
   });
 
   Account copyWith({
@@ -24,6 +28,8 @@ class Account {
     String? name,
     String? gender,
     DateTime? birthDate,
+    String? address,
+    String? phone,
   }) {
     return Account(
       email: email ?? this.email,
@@ -31,7 +37,9 @@ class Account {
       token: token ?? this.token,
       name: name ?? this.name,
       gender: gender ?? this.gender,
-      birthDate: birthDate ?? DateTime.now(),
+      birthDate: birthDate ?? this.birthDate,
+      address: address ?? this.address,
+      phone: phone ?? this.phone,
     );
   }
 
@@ -43,6 +51,8 @@ class Account {
       'name': name,
       'gender': gender,
       'birthDate': birthDate?.millisecondsSinceEpoch,
+      'address': address,
+      'phone': phone,
     };
   }
 
@@ -53,7 +63,11 @@ class Account {
       token: map['token'] ?? '',
       name: map['name'] ?? '',
       gender: map['gender'] ?? '',
-      birthDate: DateTime.fromMillisecondsSinceEpoch(map['birthDate'] * 1000),
+      birthDate: map['birthDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'] * 1000)
+          : null,
+      address: map['address'] ?? '',
+      phone: map['phone'] ?? '',
     );
   }
 
@@ -64,7 +78,7 @@ class Account {
 
   @override
   String toString() {
-    return 'Account(email: $email, password: $password, token: $token, name: $name, gender: $gender, birthDate: $birthDate)';
+    return 'Account(email: $email, password: $password, token: $token, name: $name, gender: $gender, birthDate: $birthDate, address: $address, phone: $phone)';
   }
 
   @override
@@ -77,7 +91,9 @@ class Account {
         other.token == token &&
         other.name == name &&
         other.gender == gender &&
-        other.birthDate == birthDate;
+        other.birthDate == birthDate &&
+        other.address == address &&
+        other.phone == phone;
   }
 
   @override
@@ -87,6 +103,8 @@ class Account {
         token.hashCode ^
         name.hashCode ^
         gender.hashCode ^
-        birthDate.hashCode;
+        birthDate.hashCode ^
+        address.hashCode ^
+        phone.hashCode;
   }
 }

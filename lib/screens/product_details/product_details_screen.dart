@@ -84,6 +84,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             });
                           },
                           quantity: amount,
+                          quantityLeft: 100,
                         ),
                         Spacer(),
                         Text(

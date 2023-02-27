@@ -4,8 +4,12 @@ import 'package:grocery_app/styles/colors.dart';
 class ItemCounterWidget extends StatefulWidget {
   final Function? onAmountChanged;
   final int quantity;
+  final int quantityLeft;
   const ItemCounterWidget(
-      {Key? key, this.onAmountChanged, required this.quantity})
+      {Key? key,
+      this.onAmountChanged,
+      required this.quantity,
+      required this.quantityLeft})
       : super(key: key);
 
   @override
@@ -40,10 +44,12 @@ class _ItemCounterWidgetState extends State<ItemCounterWidget> {
   }
 
   void incrementAmount() {
-    setState(() {
-      amount = amount + 1;
-      updateParent();
-    });
+    if (amount < widget.quantityLeft) {
+      setState(() {
+        amount = amount + 1;
+        updateParent();
+      });
+    }
   }
 
   void decrementAmount() {

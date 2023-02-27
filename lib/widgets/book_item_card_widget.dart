@@ -98,6 +98,7 @@ class BookItemCardWidget extends StatelessWidget {
     return Container(
       child: Image.network(
         item.imageLink,
+        fit: BoxFit.fitHeight,
       ),
     );
   }

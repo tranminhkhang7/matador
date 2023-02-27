@@ -71,6 +71,7 @@ class _ChartItemWidgetState extends State<ChartItemWidget> {
                     });
                   },
                   quantity: amount,
+                  quantityLeft: 100,
                 )
               ],
             ),

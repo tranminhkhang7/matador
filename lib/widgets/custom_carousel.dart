@@ -21,14 +21,14 @@ class _CarouselWidgetState extends State<CarouselWidget> {
           height: 200,
           child: CarouselSlider(
             items: widget.images
-                .map((image) => Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(image),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ))
+                .map(
+                  (image) => Image.asset(
+                    image,
+                    cacheHeight: 400,
+                    cacheWidth: 600,
+                    fit: BoxFit.contain,
+                  ),
+                )
                 .toList(),
             options: CarouselOptions(
               height: 200,

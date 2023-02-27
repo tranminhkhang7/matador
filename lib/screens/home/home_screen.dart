@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     //_genresCompleter = Completer<List<Genre>>();
     //getGenres();
-    genreList = booksService.fetchGenres(context);
+    //genreList = booksService.fetchGenres(context);
   }
 
   // getGenres() async {
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 15,
                   ),
-                  SvgPicture.asset("assets/icons/app_icon_color.svg"),
+                  SvgPicture.asset("assets/icons/logo.svg", height: 40),
                   SizedBox(
                     height: 5,
                   ),
@@ -105,18 +105,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 25,
                   ),
-                  // CarouselWidget(
-                  //   images: [
-                  //     'assets/images/carousel1.jpg',
-                  //     'assets/images/carousel2.jpg',
-                  //     'assets/images/carousel3.jpg',
-                  //     'assets/images/carousel4.jpg',
-                  //     'assets/images/carousel5.jpg',
-                  //   ],
-                  // ),
-
+                  CarouselWidget(
+                    images: [
+                      'assets/images/carousel1.jpg',
+                      'assets/images/carousel2.jpg',
+                      'assets/images/carousel3.jpg',
+                      'assets/images/carousel4.jpg',
+                      'assets/images/carousel5.jpg',
+                    ],
+                  ),
                   FutureBuilder(
-                    future: genreList,
+                    future: booksService.fetchGenres(context),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done &&
                           snapshot.hasData) {
@@ -141,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                   ),
-
                   SizedBox(
                     height: 25,
                   ),
@@ -171,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget padded(Widget widget) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 25),
+      padding: EdgeInsets.symmetric(horizontal: 15),
       child: widget,
     );
   }

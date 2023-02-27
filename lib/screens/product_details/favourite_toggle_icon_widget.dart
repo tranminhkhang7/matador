@@ -12,6 +12,7 @@ class FavoriteToggleIcon extends StatefulWidget {
 
 class _FavoriteToggleIconState extends State<FavoriteToggleIcon> {
   late bool favorite;
+
   BooksService booksService = BooksService();
   @override
   void initState() {
@@ -19,8 +20,8 @@ class _FavoriteToggleIconState extends State<FavoriteToggleIcon> {
     super.initState();
   }
 
-  void addToFavorite(int id) {
-    booksService.addToFavorite(context, id);
+  void addToFavorite(int id) async {
+    await booksService.addToFavorite(context, id);
   }
 
   void removeFromFavorite(int id) {

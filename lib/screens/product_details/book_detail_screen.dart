@@ -7,10 +7,12 @@ import 'package:grocery_app/common_widgets/stars.dart';
 import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/models/book_item.dart';
 import 'package:grocery_app/providers/favorite_list_provider.dart';
+import 'package:grocery_app/services/cart_services.dart';
 
 import 'package:grocery_app/widgets/book_item_card_widget.dart';
 
 import 'package:grocery_app/widgets/item_counter_widget.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 
 import 'favourite_toggle_icon_widget.dart';
@@ -38,7 +40,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
       price: 2,
       publisher: 'Khoa',
-      quantityLeft: '15',
+      quantityLeft: 15,
       status: 'active',
       title: 'Book test',
     ),
@@ -50,7 +52,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
       price: 2,
       publisher: 'Khoa',
-      quantityLeft: '15',
+      quantityLeft: 15,
       status: 'active',
       title: 'Book test',
     ),
@@ -62,7 +64,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
       price: 2,
       publisher: 'Khoa',
-      quantityLeft: '15',
+      quantityLeft: 15,
       status: 'active',
       title: 'Book test',
     ),
@@ -74,7 +76,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
       price: 2,
       publisher: 'Khoa',
-      quantityLeft: '15',
+      quantityLeft: 15,
       status: 'active',
       title: 'Book test',
     ),
@@ -86,7 +88,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9vayUyMGNvdmVyfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
       price: 2,
       publisher: 'Khoa',
-      quantityLeft: '15',
+      quantityLeft: 15,
       status: 'active',
       title: 'Book test',
     ),
@@ -94,6 +96,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
 
   int amount = 1;
   // List<BookItem> mockList = bookItemList;
+  bool _isLoading = false;
+  final CartServices cartServices = CartServices();
   @override
   void initState() {
     super.initState();
@@ -106,47 +110,53 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     );
   }
 
+  void addToCart(int bookId, int quantity) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await cartServices.addToCart(context, bookId, quantity);
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final favProvider = context.watch<FavoriteListProvider>().favoriteList;
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              padding: EdgeInsets.only(left: 25),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 8,
-                  right: 8,
-                ),
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-          title: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 25,
-            ),
-            child: AppText(
-              text: widget.bookItem.title,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              maxLines: 1,
-              textOverflow: TextOverflow.ellipsis,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            padding: const EdgeInsets.only(left: 25),
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
             ),
           ),
         ),
-        body: SingleChildScrollView(
+        title: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 25,
+          ),
+          child: AppText(
+            text: widget.bookItem.title,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            maxLines: 1,
+            textOverflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+      body: ModalProgressHUD(
+        inAsyncCall: _isLoading,
+        child: SingleChildScrollView(
           child: Column(
             children: [
               getImageHeaderWidget(),
@@ -157,18 +167,21 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(
-                        widget.bookItem.title,
+                        '${widget.bookItem.title} - ${widget.bookItem.author}',
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 20, fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      subtitle: AppText(
-                        text: widget.bookItem.description,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff7C7C7C),
-                        maxLines: 5,
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: AppText(
+                          text: widget.bookItem.description,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff7C7C7C),
+                          maxLines: 5,
+                        ),
                       ),
                       trailing: FavoriteToggleIcon(
                         id: widget.bookItem.bookId,
@@ -188,13 +201,20 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             });
                           },
                           quantity: amount,
+                          quantityLeft: int.parse(
+                              widget.bookItem.quantityLeft.toString()),
                         ),
-                        Text(
-                          "\$${getTotalPrice().toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Column(
+                          children: [
+                            Text(
+                              "\$${getTotalPrice().toStringAsFixed(2)}",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text('${widget.bookItem.quantityLeft} left'),
+                          ],
                         ),
                       ],
                     ),
@@ -221,13 +241,17 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                     ),
                     AppButton(
                       label: "Add To Basket",
+                      onPressed: () =>
+                          addToCart(widget.bookItem.bookId, amount),
                     ),
                   ],
                 ),
               )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   void navigateToBookDetailScreen(BookItem b) {

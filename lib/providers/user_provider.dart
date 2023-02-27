@@ -9,6 +9,8 @@ class UserProvider extends ChangeNotifier {
     name: '',
     gender: '',
     birthDate: null,
+    address: '',
+    phone: '',
   );
   Account get account => _account;
   void setUser(String user) {
@@ -29,6 +31,8 @@ class UserProvider extends ChangeNotifier {
       name: '',
       gender: '',
       birthDate: null,
+      address: '',
+      phone: '',
     );
   }
 }

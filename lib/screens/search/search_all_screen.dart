@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:grocery_app/constants/routes_constraints.dart';
@@ -24,17 +26,21 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
   ScrollController scrollController = ScrollController();
   List<BookItem> bookList = [];
-  List<BookItem> displayBooks = [];
+
   BooksService searchBooksService = BooksService();
   bool _isLoading = false;
-  int page = 1;
-  static final int _pageLimit = 6;
+
+  int _currentPage = 0;
+  late bool _isFirstLoad;
   @override
   void initState() {
     if (mounted) {
       _searchController.text = widget.searchQuery;
-      scrollController = ScrollController()..addListener(_scrollListener);
-      fetchSearchProducts();
+
+      scrollController.addListener(_scrollListener);
+      _isFirstLoad = true;
+      loadMoreItem();
+      //fetchSearchProducts();
     }
 
     super.initState();
@@ -43,26 +49,28 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    // scrollController.removeListener(_scrollListener);
+    // scrollController.dispose();
+
     scrollController.removeListener(_scrollListener);
     scrollController.dispose();
     super.dispose();
   }
 
-  fetchSearchProducts() async {
-    _isLoading = true;
-    bookList = await searchBooksService.fetchSearchedProducts(
-      context: context,
-      searchQuery: widget.searchQuery,
-    );
-
-    displayBooks = bookList
-        .skip((_pageLimit * page) - _pageLimit)
-        .take(_pageLimit)
-        .toList();
-    setState(() {});
-    _isLoading = false;
-    //log(productList.toString());
-  }
+  // fetchSearchProducts() async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   bookList = await searchBooksService.fetchSearchedProducts(
+  //     context: context,
+  //     searchQuery: widget.searchQuery,
+  //   );
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  //   setState(() {});
+  //   //log(productList.toString());
+  // }
 
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(
@@ -81,24 +89,43 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  void _scrollListener() {
-    if (scrollController.position.extentAfter < 1) {
-      Future.delayed(
-        const Duration(seconds: 5),
+  bool _isLoadingMore = false;
+  bool _hasMoreItems = true;
+  Future<void> loadMoreItem() async {
+    if (!_isLoadingMore && _hasMoreItems && !_isLoading) {
+      setState(() {
+        _isLoadingMore = true;
+        if (_isFirstLoad) {
+          _isLoading = true;
+        }
+      });
+
+      final newItems = await searchBooksService.fetchSearchedProducts(
+        context: context,
+        searchQuery: widget.searchQuery,
+        pageNo: _currentPage,
+      );
+      setState(
         () {
-          if (mounted) {
-            setState(
-              () {
-                page++;
-                displayBooks.addAll(bookList
-                    .skip((_pageLimit * page) - _pageLimit)
-                    .take(_pageLimit)
-                    .toList());
-              },
-            );
+          _isLoadingMore = false;
+          _isLoading = false;
+          if (_isFirstLoad) {
+            _isFirstLoad = false;
           }
+          _currentPage++;
+          _hasMoreItems =
+              newItems.length == 6; // assume that each page has 6 items
+          bookList.addAll(newItems);
         },
       );
+    }
+  }
+
+  void _scrollListener() {
+    if (!_isLoadingMore &&
+        _hasMoreItems &&
+        scrollController.position.extentAfter == 0) {
+      loadMoreItem();
     }
   }
 
@@ -206,23 +233,35 @@ class _SearchScreenState extends State<SearchScreen> {
               : Scrollbar(
                   child: SingleChildScrollView(
                     controller: scrollController,
-                    child: StaggeredGrid.count(
-                      crossAxisCount: 2,
-                      children: displayBooks.map<Widget>((e) {
-                        BookItem bookItem = e;
-                        return GestureDetector(
-                          onTap: () => navigateToBookDetailScreen(bookItem),
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            child: BookItemCardWidget(
-                              item: bookItem,
-                              heroSuffix: "explore_screen",
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      mainAxisSpacing: 3.0,
-                      crossAxisSpacing: 0.0, // add some space
+                    child: Column(
+                      children: [
+                        StaggeredGrid.count(
+                          crossAxisCount: 2,
+                          children: bookList.map<Widget>((e) {
+                            BookItem bookItem = e;
+                            return GestureDetector(
+                              onTap: () => navigateToBookDetailScreen(bookItem),
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: BookItemCardWidget(
+                                  item: bookItem,
+                                  heroSuffix: "explore_screen",
+                                ),
+                              ),
+                            );
+                          }).toList(),
+
+                          mainAxisSpacing: 3.0,
+                          crossAxisSpacing: 0.0, // add some space
+                        ),
+                        _isLoadingMore
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
+                              )
+                            : SizedBox(),
+                      ],
                     ),
                   ),
                 ),
