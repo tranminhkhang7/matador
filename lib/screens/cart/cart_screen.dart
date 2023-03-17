@@ -1,12 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:grocery_app/common_widgets/app_text.dart';
 import 'package:grocery_app/common_widgets/app_textfield.dart';
 import 'package:grocery_app/helpers/column_with_seprator.dart';
+import 'package:grocery_app/helpers/snackbar.dart';
 
 import 'package:grocery_app/providers/cart_provider.dart';
 import 'package:grocery_app/providers/user_provider.dart';
 import 'package:grocery_app/screens/cart/widgets/cart_item.dart';
+import 'package:grocery_app/services/cart_services.dart';
+import 'package:grocery_app/styles/colors.dart';
 import 'package:pay/pay.dart';
 
 import 'package:provider/provider.dart';
@@ -24,6 +29,10 @@ class _CartScreenState extends State<CartScreen> {
   final Future<PaymentConfiguration> _gpayConfig =
       PaymentConfiguration.fromAsset("gpay.json");
   List<PaymentItem> paymentItems = [];
+  final CartServices cartServices = CartServices();
+  final _cartFormKey = GlobalKey<FormState>();
+  String addressToBeUsed = "";
+  String phoneToBeUsed = "";
   @override
   Widget build(BuildContext context) {
     final cartProvider = context.watch<CartProvider>().cartFavoriteList;
@@ -43,9 +52,9 @@ class _CartScreenState extends State<CartScreen> {
     return userProvider.token.isEmpty
         ? Center(
             child: AppText(
-              text: "Đi login đi",
+              text: "Go back to login",
               fontWeight: FontWeight.w600,
-              color: Color(0xFF7C7C7C),
+              color: AppColors.primaryColor,
             ),
           )
         : Scaffold(
@@ -84,26 +93,36 @@ class _CartScreenState extends State<CartScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          if (userProvider.address == null ||
-                              userProvider.address.isEmpty)
-                            AppTextField(
-                              controller: _addressController,
-                              hintText: 'Address',
-                              isObscure: false,
+                          if (userProvider.customer.address == null ||
+                              userProvider.customer.address!.isEmpty)
+                            Form(
+                              key: _cartFormKey,
+                              child: Container(
+                                padding: const EdgeInsets.all(15),
+                                child: Column(
+                                  children: [
+                                    AppTextField(
+                                      controller: _addressController,
+                                      hintText: 'Address',
+                                      isObscure: false,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    if (userProvider.customer.phone == null ||
+                                        userProvider.customer.phone!.isEmpty)
+                                      AppTextField(
+                                        controller: _phoneController,
+                                        hintText: 'Phone',
+                                        isObscure: false,
+                                      ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          if (userProvider.phone == null ||
-                              userProvider.phone.isEmpty)
-                            AppTextField(
-                              controller: _phoneController,
-                              hintText: 'Phone',
-                              isObscure: false,
-                            ),
-                          SizedBox(
-                            height: 20,
-                          ),
                           Column(
                             children: getChildrenWithSeperator(
                               addToLastChild: false,
@@ -132,7 +151,12 @@ class _CartScreenState extends State<CartScreen> {
                           Divider(
                             thickness: 1,
                           ),
-                          getCheckoutButton(context, sum)
+                          getCheckoutButton(
+                            context,
+                            sum,
+                            userProvider.customer.address ?? "",
+                            userProvider.customer.phone ?? "",
+                          )
                         ],
                       ),
                     ),
@@ -142,14 +166,39 @@ class _CartScreenState extends State<CartScreen> {
 
   void onGooglePayResult(paymentResult) {
     debugPrint(paymentResult.toString());
+    cartServices.payment(
+        context: context, address: addressToBeUsed, phone: phoneToBeUsed);
   }
 
-  Widget getCheckoutButton(BuildContext context, double totalPrice) {
+  void payPressed(String addressFromProvider, String phoneFromProvider) {
+    addressToBeUsed = "";
+    bool isForm =
+        _addressController.text.isNotEmpty || _phoneController.text.isNotEmpty;
+
+    if (isForm) {
+      if (_cartFormKey.currentState!.validate()) {
+        addressToBeUsed = _addressController.text;
+        phoneToBeUsed = _phoneController.text;
+      } else {
+        throw Exception('Please enter all the values!');
+      }
+    } else if (addressFromProvider.isNotEmpty) {
+      addressToBeUsed = addressFromProvider;
+      phoneToBeUsed = phoneFromProvider;
+    } else {
+      showSnackBar(context, 'ERROR');
+    }
+    log(addressToBeUsed);
+  }
+
+  Widget getCheckoutButton(BuildContext context, double totalPrice,
+      String addressFromProvider, String phoneFromProvider) {
     return FutureBuilder(
       future: _gpayConfig,
       builder: (context, snapshot) => snapshot.hasData
           ? GooglePayButton(
-              onPressed: () {},
+              onPressed: () =>
+                  payPressed(addressFromProvider, phoneFromProvider),
               paymentConfiguration: snapshot.data!,
               paymentItems: paymentItems,
               type: GooglePayButtonType.buy,

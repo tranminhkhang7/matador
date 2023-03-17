@@ -8,6 +8,7 @@ import 'package:grocery_app/providers/favorite_list_provider.dart';
 
 import 'package:grocery_app/providers/user_provider.dart';
 import 'package:grocery_app/services/books_services.dart';
+import 'package:grocery_app/styles/colors.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'package:provider/provider.dart';
@@ -49,8 +50,11 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     return Scaffold(
       body: user.token.isEmpty
           ? Center(
-              child:
-                  TextButton(onPressed: () {}, child: Text('Go back to login')),
+              child: AppText(
+                text: 'Go back to login',
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
             )
           : favList.isEmpty
               ? Center(

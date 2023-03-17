@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:grocery_app/constants/constant.dart';
@@ -14,8 +15,8 @@ class OrderServices {
     List<OrderDetail> orderDetails = [];
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      http.Response res = await http
-          .get(Uri.parse('$uriCuaKhoa/orderdetails/$orderId'), headers: {
+      http.Response res =
+          await http.get(Uri.parse('$uriCuaKhoa/order/get/$orderId'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer ${userProvider.account.token}"
       });

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_app/models/account.dart';
+import 'package:grocery_app/models/customer.dart';
 
 class UserProvider extends ChangeNotifier {
   Account _account = Account(
     email: '',
     password: '',
     token: '',
-    name: '',
-    gender: '',
-    birthDate: null,
-    address: '',
-    phone: '',
+    customer: Customer(
+      name: '',
+      gender: '',
+      address: '',
+      phone: '',
+    ),
   );
   Account get account => _account;
   void setUser(String user) {
@@ -28,11 +30,12 @@ class UserProvider extends ChangeNotifier {
       email: '',
       password: '',
       token: '',
-      name: '',
-      gender: '',
-      birthDate: null,
-      address: '',
-      phone: '',
+      customer: Customer(
+        name: '',
+        gender: '',
+        address: '',
+        phone: '',
+      ),
     );
   }
 }

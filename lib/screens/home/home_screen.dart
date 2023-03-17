@@ -70,11 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 15,
                   ),
-                  SvgPicture.asset("assets/icons/logo.svg", height: 40),
+                  SvgPicture.asset("assets/icons/book-icon.svg", height: 40),
                   SizedBox(
                     height: 5,
                   ),
-                  padded(locationWidget(user.name)),
+                  user.customer.address != null
+                      ? padded(locationWidget(user.customer.address ?? ""))
+                      : padded(Container()),
                   SizedBox(
                     height: 15,
                   ),
@@ -143,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 25,
                   ),
-                  padded(subTitle("Chủ Đề Hấp Dẫn")),
+                  padded(subTitle("Most Rating")),
                   getHorizontalItemSlider(exclusiveOffers),
                   SizedBox(
                     height: 15,
@@ -153,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 15,
                   ),
-                  padded(subTitle("Sách Mới")),
+                  padded(subTitle("New Arrivals")),
                   getHorizontalItemSlider(groceries),
                   SizedBox(
                     height: 15,

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
+
 import 'package:grocery_app/common_widgets/app_textfield.dart';
 import 'package:grocery_app/screens/review/widgets/comment_items.dart';
 import 'package:grocery_app/styles/colors.dart';
-import 'package:intl/intl.dart';
+
+import '../../models/comment.dart';
 
 class ReviewScreen extends StatefulWidget {
-  const ReviewScreen({super.key});
+  final List<Comment>? comments;
+  const ReviewScreen({
+    Key? key,
+    this.comments,
+  }) : super(key: key);
 
   @override
   State<ReviewScreen> createState() => _ReviewScreenState();
@@ -109,17 +114,19 @@ class _ReviewScreenState extends State<ReviewScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return CommentWidget(
-                    rating: 3,
-                    comment:
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at libero et elit pretium tincidunt sit amet sit amet est. Proin aliquet, leo a luctus suscipit, velit felis vehicula eros, sit amet rhoncus ipsum eros eget ex. Nullam sed purus vel ante facilisis dapibus eu vel sem. Nam nec nisi vitae lorem consectetur pellentesque. Sed aliquam sapien vel tellus blandit, eu facilisis ex consectetur. Maecenas malesuada ligula vel urna commodo, ut sollicitudin tellus sagittis. Etiam bibendum mauris ac eros hendrerit, at cursus mauris volutpat. Morbi tincidunt ipsum et leo ullamcorper vulputate. Ut varius elit at velit faucibus tincidunt. Nullam viverra, sapien vel rutrum bibendum, nunc ante mattis orci, ac suscipit nisi tortor sit amet libero. Sed convallis malesuada ligula ac malesuada. Duis auctor finibus eros, nec tincidunt enim pellentesque ac. Nulla non ligula quis felis tincidunt ultricies. Donec malesuada ante quis nulla convallis, sit amet laoreet dolor lobortis.',
-                    date: DateFormat('dd/MM/y h:mm a').format(DateTime.now()),
-                    name: 'Khoa Bui',
-                  );
-                }),
+            child: widget.comments == null
+                ? SizedBox()
+                : ListView.builder(
+                    itemCount: widget.comments?.length,
+                    itemBuilder: (context, index) {
+                      return CommentWidget(
+                        rating: widget.comments![index].rating,
+                        comment: widget.comments![index].content,
+                        date: DateFormat('dd/MM/y h:mm a')
+                            .format(widget.comments![index].timestamp),
+                        name: 'Khoa Bui',
+                      );
+                    }),
           )
         ],
       ),

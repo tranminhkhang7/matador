@@ -6,7 +6,8 @@ import 'package:grocery_app/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  final String imagePath = "assets/images/welcome_image.png";
+  final String imagePath =
+      "https://github.com/khoabm/A-Corner-Of-Books/blob/main/ACornerOfBooks/src/main/webapp/assets/images/5.jpg?raw=true";
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 30),
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(imagePath),
+              image: NetworkImage(imagePath),
               fit: BoxFit.cover,
             ),
           ),
@@ -25,7 +26,7 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Spacer(),
-                icon(),
+                //icon(),
                 SizedBox(
                   height: 20,
                 ),
@@ -48,7 +49,7 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   Widget icon() {
-    String iconPath = "assets/icons/app_icon.svg";
+    String iconPath = "assets/icons/book_icon.svg";
     return SvgPicture.asset(
       iconPath,
       width: 48,
@@ -77,7 +78,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget sloganText() {
     return AppText(
-      text: "Get your grecories as fast as in hour",
+      text: "Get your books as fast as in hour",
       fontSize: 16,
       fontWeight: FontWeight.w600,
       color: Color(0xffFCFCFC).withOpacity(0.7),

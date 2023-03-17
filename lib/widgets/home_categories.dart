@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grocery_app/constants/routes_constraints.dart';
+import 'package:grocery_app/helpers/string_extesions.dart';
 import 'package:grocery_app/models/genre.dart';
 
 class CategoryGridView extends StatefulWidget {
@@ -58,7 +59,7 @@ class _CategoryGridViewState extends State<CategoryGridView> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      widget.genres[index].genreName,
+                      widget.genres[index].genreName.capitalize(),
                       style: const TextStyle(fontSize: 9),
                     ),
                   ],

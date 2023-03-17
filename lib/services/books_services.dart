@@ -36,13 +36,9 @@ class BooksService {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+          for (int i = 0; i < jsonDecode(res.body)['listBook'].length; i++) {
             bookList.add(
-              BookItem.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
-              ),
+              BookItem.fromMap(jsonDecode(res.body)['listBook'][i]),
             );
           }
         },
@@ -59,30 +55,76 @@ class BooksService {
     return bookList;
   }
 
-  Future<List<BookItem>> fetchSearchedProductsChatGPT({
+  Future<BookItem> fetchBookItem({
     required BuildContext context,
-    required String searchQuery,
+    required int bookId,
   }) async {
-    final queryParams = {'query': searchQuery};
-    final uri = Uri.https(uriCuaKhoa, '/book/search', queryParams);
-
-    final bookList = <BookItem>[];
-
+    BookItem book = BookItem(
+      bookId: bookId,
+      author: '',
+      description: '',
+      imageLink: '',
+      price: 0,
+      publisher: '',
+      quantityLeft: 0,
+      status: '',
+      title: '',
+    );
     try {
-      final response = await http.get(uri, headers: {
+      http.Response res =
+          await http.get(Uri.parse('$uriCuaKhoa/book/view/$bookId'), headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         //'Authorization': 'Bearer ${userProvider.account.token}',
-      }).timeout(const Duration(seconds: 4));
-
-      final data = jsonDecode(response.body) as List<dynamic>;
-      bookList.addAll(
-          data.map((bookData) => BookItem.fromJson(jsonEncode(bookData))));
+      });
+      log(res.body);
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          book = BookItem.fromJson(
+            jsonEncode(
+              jsonDecode(res.body),
+            ),
+          );
+          log(book.title);
+        },
+      );
+    } on SocketException catch (e) {
+      showSnackBar(
+        context,
+        'Connection refuse $e',
+      );
     } catch (e) {
       showSnackBar(context, e.toString());
     }
 
-    return bookList;
+    return book;
   }
+
+  // Future<List<BookItem>> fetchSearchedProductsChatGPT({
+  //   required BuildContext context,
+  //   required String searchQuery,
+  // }) async {
+  //   final queryParams = {'query': searchQuery};
+  //   final uri = Uri.https(uriCuaKhoa, '/book/search', queryParams);
+
+  //   final bookList = <BookItem>[];
+
+  //   try {
+  //     final response = await http.get(uri, headers: {
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //       //'Authorization': 'Bearer ${userProvider.account.token}',
+  //     }).timeout(const Duration(seconds: 4));
+
+  //     final data = jsonDecode(response.body) as List<dynamic>;
+  //     bookList.addAll(
+  //         data.map((bookData) => BookItem.fromJson(jsonEncode(bookData))));
+  //   } catch (e) {
+  //     showSnackBar(context, e.toString());
+  //   }
+
+  //   return bookList;
+  // }
 
   Future<List<BookItem>> fetchCategoryBooks({
     required BuildContext context,

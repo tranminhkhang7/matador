@@ -9,6 +9,7 @@ import 'package:grocery_app/helpers/http_handler.dart';
 import 'package:grocery_app/helpers/snackbar.dart';
 import 'package:grocery_app/models/account.dart';
 import 'package:grocery_app/models/book_item.dart';
+import 'package:grocery_app/models/customer.dart';
 import 'package:grocery_app/models/order.dart';
 import 'package:grocery_app/providers/cart_provider.dart';
 import 'package:grocery_app/providers/favorite_list_provider.dart';
@@ -17,29 +18,64 @@ import 'package:grocery_app/providers/user_provider.dart';
 import 'package:grocery_app/services/cart_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  Future<void> signUpUser({
-    required BuildContext context,
-    required String email,
-    required String password,
-  }) async {
+  Future<void> signUpUser(
+      {required BuildContext context,
+      required String email,
+      required String password,
+      required String name,
+      String? address,
+      required String gender,
+      String? phone,
+      DateTime? birthday}) async {
     try {
-      // Account account = Account(
-      //   email: email,
-      //   password: password,
-      //   token: '',
-      //   birthDate: null,
-      //   gender: '',
-      //   name: '',
-      // );
+      Account account = Account(
+        email: email,
+        password: password,
+        token: '',
+        customer: Customer(
+          address: address,
+          birthday: null,
+          gender: gender,
+          name: name,
+          phone: phone,
+        ),
+      );
+      Customer customer = Customer(
+        name: name,
+        gender: gender,
+        birthday: birthday,
+        address: address,
+        phone: phone,
+      );
+      String json = jsonEncode({
+        'email': email,
+        'password': password,
+        'customerDetail': {
+          'name': name,
+          'gender': gender,
+          'birthday': "2023-02-11T13:30:00Z",
+          'address': address,
+          'phone': phone
+        }
+      });
+      log(jsonDecode(json).toString());
       http.Response res = await http.post(
         Uri.parse("$uriCuaKhoa/auth/signup"),
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+        body: json,
+        // jsonEncode({
+        //   'email': email,
+        //   'password': password,
+        //   'customerDetail': jsonEncode({
+        //     'name': name,
+        //     'gender': gender,
+        //     'birthday': "2023-02-11T13:30:00Z",
+        //     'address': address,
+        //     'phone': phone
+        //   })
+        //   //customer.toJson(),
+        // }),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -90,11 +126,12 @@ class AuthService {
               email: email,
               password: password,
               token: data['token'],
-              birthDate: DateTime.parse(data['customerDetail']['birthday']),
-              gender: data['customerDetail']['gender'],
-              name: data['customerDetail']['name'],
-              address: data['customerDetail']['address'],
-              phone: data['customerDetail']['phone'],
+              customer: Customer.fromMap(data['customerDetail']),
+              // birthDate: DateTime.parse(data['customerDetail']['birthday']),
+              // gender: data['customerDetail']['gender'],
+              // name: data['customerDetail']['name'],
+              // address: data['customerDetail']['address'],
+              // phone: data['customerDetail']['phone'],
             );
 
             //favList

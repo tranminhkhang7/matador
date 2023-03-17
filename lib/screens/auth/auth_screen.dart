@@ -72,7 +72,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        _page == 0 ? 'ĐĂNG NHẬP' : "ĐĂNG KÝ",
+                        _page == 0 ? 'Log In' : "Sign up",
                         style: const TextStyle(
                           color: AppColors.scaffoldBackgroundColor,
                           fontSize: 16,
@@ -91,10 +91,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                     labelColor: AppColors.secondaryColor,
                     tabs: const [
                       Tab(
-                        text: 'ĐĂNG NHẬP',
+                        text: 'Log In',
                       ),
                       Tab(
-                        text: 'ĐĂNG KÝ',
+                        text: 'Sign Up',
                       )
                     ],
                     controller: _tabController,

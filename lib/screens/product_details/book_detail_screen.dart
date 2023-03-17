@@ -6,8 +6,11 @@ import 'package:grocery_app/common_widgets/stars.dart';
 
 import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/models/book_item.dart';
+import 'package:grocery_app/models/genre.dart';
 import 'package:grocery_app/providers/favorite_list_provider.dart';
+import 'package:grocery_app/services/books_services.dart';
 import 'package:grocery_app/services/cart_services.dart';
+import 'package:grocery_app/styles/colors.dart';
 
 import 'package:grocery_app/widgets/book_item_card_widget.dart';
 
@@ -15,6 +18,7 @@ import 'package:grocery_app/widgets/item_counter_widget.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/comment.dart';
 import 'favourite_toggle_icon_widget.dart';
 
 class BookDetailScreen extends StatefulWidget {
@@ -98,16 +102,40 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   // List<BookItem> mockList = bookItemList;
   bool _isLoading = false;
   final CartServices cartServices = CartServices();
+  final BooksService booksService = BooksService();
+  BookItem book = BookItem(
+    bookId: 0,
+    author: '',
+    description: '',
+    imageLink: '',
+    price: 0,
+    publisher: '',
+    quantityLeft: 0,
+    status: '',
+    title: '',
+  );
+  // Future<BookItem> fetchBookItem() async {
+  //   return await booksService.fetchBookItem(
+  //     context: context,
+  //     bookId: widget.bookItem.bookId,
+  //   );
+  // }
+  void fetchBookItem() async {
+    var bookItem = await booksService.fetchBookItem(
+        context: context, bookId: widget.bookItem.bookId);
+    setState(() {
+      book = bookItem;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    fetchBookItem();
   }
 
-  void navigateToReviewScreen() {
-    Navigator.pushNamed(
-      context,
-      RoutesHandler.COMMENT,
-    );
+  void navigateToReviewScreen(List<Comment>? comments) {
+    Navigator.pushNamed(context, RoutesHandler.COMMENT, arguments: comments);
   }
 
   void addToCart(int bookId, int quantity) async {
@@ -118,6 +146,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void navigateToCategoryScreen(Genre genre) {
+    Navigator.pushNamed(
+      context,
+      RoutesHandler.CATEGORY_PRODUCTS,
+      arguments: genre,
+    );
   }
 
   @override
@@ -146,7 +182,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
             horizontal: 25,
           ),
           child: AppText(
-            text: widget.bookItem.title,
+            text: book.title,
             fontWeight: FontWeight.bold,
             fontSize: 20,
             maxLines: 1,
@@ -156,100 +192,103 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       ),
       body: ModalProgressHUD(
         inAsyncCall: _isLoading,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              getImageHeaderWidget(),
-              Padding(
-                padding: const EdgeInsets.all(12),
+        child: book.title.isEmpty
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
                 child: Column(
                   children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        '${widget.bookItem.title} - ${widget.bookItem.author}',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: AppText(
-                          text: widget.bookItem.description,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff7C7C7C),
-                          maxLines: 5,
-                        ),
-                      ),
-                      trailing: FavoriteToggleIcon(
-                        id: widget.bookItem.bookId,
-                        isFavorite: favProvider.contains(widget.bookItem),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ItemCounterWidget(
-                          onAmountChanged: (newAmount) {
-                            setState(() {
-                              amount = newAmount;
-                            });
-                          },
-                          quantity: amount,
-                          quantityLeft: int.parse(
-                              widget.bookItem.quantityLeft.toString()),
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "\$${getTotalPrice().toStringAsFixed(2)}",
+                    getImageHeaderWidget(),
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              '${book.title} - ${book.author}',
                               style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: AppText(
+                                text: book.description,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xff7C7C7C),
+                                maxLines: 5,
                               ),
                             ),
-                            Text('${widget.bookItem.quantityLeft} left'),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    getHorizontalItemSlider(mockList),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Divider(thickness: 1),
-                    getProductDataRowWidget("Product Details"),
-                    Divider(thickness: 1),
-                    GestureDetector(
-                      onTap: () => navigateToReviewScreen(),
-                      child: getProductDataRowWidget(
-                        "Review",
-                        customWidget: ratingWidget(),
+                            trailing: FavoriteToggleIcon(
+                              id: book.bookId,
+                              isFavorite: favProvider.contains(book),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ItemCounterWidget(
+                                onAmountChanged: (newAmount) {
+                                  setState(() {
+                                    amount = newAmount;
+                                  });
+                                },
+                                quantity: amount,
+                                quantityLeft:
+                                    int.parse(book.quantityLeft.toString()),
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    "\$${getTotalPrice().toStringAsFixed(2)}",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text('${book.quantityLeft} left'),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          getHorizontalGenreSlider(book.genreName),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Divider(thickness: 1),
+                          getHorizontalItemSlider(mockList),
+                          Divider(thickness: 1),
+                          GestureDetector(
+                            onTap: () => navigateToReviewScreen(book.comment),
+                            child: getProductDataRowWidget(
+                              "Review",
+                              customWidget: ratingWidget(book.rating),
+                            ),
+                          ),
+                          Divider(thickness: 1),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          AppButton(
+                            label: "Add To Basket",
+                            onPressed: () => addToCart(book.bookId, amount),
+                          ),
+                        ],
                       ),
-                    ),
-                    Divider(thickness: 1),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    AppButton(
-                      label: "Add To Basket",
-                      onPressed: () =>
-                          addToCart(widget.bookItem.bookId, amount),
-                    ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-        ),
+              ),
       ),
     );
   }
@@ -286,6 +325,45 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     );
   }
 
+  Widget getHorizontalGenreSlider(List<Genre>? items) {
+    return items == null
+        ? Container()
+        : Container(
+            height: 50,
+            child: ListView.separated(
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              itemCount: items.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () => navigateToCategoryScreen(items[index]),
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      border: Border.all(color: Colors.black26),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Text(
+                      items[index].genreName.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  width: 20,
+                );
+              },
+            ),
+          );
+  }
+
   Widget getImageHeaderWidget() {
     return Container(
       height: 250,
@@ -308,12 +386,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
             tileMode: TileMode.clamp),
       ),
       child: Hero(
-        tag: "GroceryItem:" +
-            widget.bookItem.title +
-            "-" +
-            (widget.heroSuffix ?? ""),
+        tag: "GroceryItem:" + book.title + "-" + (widget.heroSuffix ?? ""),
         child: Image(
-          image: NetworkImage(widget.bookItem.imageLink),
+          image: NetworkImage(book.imageLink),
         ),
       ),
     );
@@ -344,21 +419,21 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     );
   }
 
-  Widget ratingWidget() {
-    Widget starIcon() {
-      return Icon(
-        Icons.star,
-        color: Color(0xffF3603F),
-        size: 20,
-      );
-    }
+  Widget ratingWidget(avgRating) {
+    // Widget starIcon() {
+    //   return Icon(
+    //     Icons.star,
+    //     color: Color(0xffF3603F),
+    //     size: 20,
+    //   );
+    // }
 
     return Stars(
-      rating: 4.5,
+      rating: avgRating,
     );
   }
 
   double getTotalPrice() {
-    return amount * widget.bookItem.price;
+    return amount * book.price;
   }
 }

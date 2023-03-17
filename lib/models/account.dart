@@ -1,45 +1,36 @@
 import 'dart:convert';
 
+import 'package:grocery_app/models/customer.dart';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Account {
   final String email;
   final String password;
   final String token;
-  final String name;
-  final String gender;
-  final DateTime? birthDate;
-  final String address;
-  final String phone;
+  // final String name;
+  // final String gender;
+  // final DateTime? birthDate;
+  // final String address;
+  // final String phone;
+  final Customer customer;
   Account({
     required this.email,
     required this.password,
     required this.token,
-    required this.name,
-    required this.gender,
-    required this.birthDate,
-    required this.address,
-    required this.phone,
+    required this.customer,
   });
 
   Account copyWith({
     String? email,
     String? password,
     String? token,
-    String? name,
-    String? gender,
-    DateTime? birthDate,
-    String? address,
-    String? phone,
+    Customer? customer,
   }) {
     return Account(
       email: email ?? this.email,
       password: password ?? this.password,
       token: token ?? this.token,
-      name: name ?? this.name,
-      gender: gender ?? this.gender,
-      birthDate: birthDate ?? this.birthDate,
-      address: address ?? this.address,
-      phone: phone ?? this.phone,
+      customer: customer ?? this.customer,
     );
   }
 
@@ -48,11 +39,7 @@ class Account {
       'email': email,
       'password': password,
       'token': token,
-      'name': name,
-      'gender': gender,
-      'birthDate': birthDate?.millisecondsSinceEpoch,
-      'address': address,
-      'phone': phone,
+      'customer': customer.toMap(),
     };
   }
 
@@ -61,13 +48,7 @@ class Account {
       email: map['email'] ?? '',
       password: map['password'] ?? '',
       token: map['token'] ?? '',
-      name: map['name'] ?? '',
-      gender: map['gender'] ?? '',
-      birthDate: map['birthDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'] * 1000)
-          : null,
-      address: map['address'] ?? '',
-      phone: map['phone'] ?? '',
+      customer: Customer.fromMap(map['customer']),
     );
   }
 
@@ -78,7 +59,7 @@ class Account {
 
   @override
   String toString() {
-    return 'Account(email: $email, password: $password, token: $token, name: $name, gender: $gender, birthDate: $birthDate, address: $address, phone: $phone)';
+    return 'Account(email: $email, password: $password, token: $token, customer: $customer)';
   }
 
   @override
@@ -89,11 +70,7 @@ class Account {
         other.email == email &&
         other.password == password &&
         other.token == token &&
-        other.name == name &&
-        other.gender == gender &&
-        other.birthDate == birthDate &&
-        other.address == address &&
-        other.phone == phone;
+        other.customer == customer;
   }
 
   @override
@@ -101,10 +78,6 @@ class Account {
     return email.hashCode ^
         password.hashCode ^
         token.hashCode ^
-        name.hashCode ^
-        gender.hashCode ^
-        birthDate.hashCode ^
-        address.hashCode ^
-        phone.hashCode;
+        customer.hashCode;
   }
 }

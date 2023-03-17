@@ -173,50 +173,50 @@ class _LoginViewState extends State<LoginView>
                       const SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Material(
-                            color: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            child: Ink(
-                              child: InkWell(
-                                splashColor: AppColors.lightGrey,
-                                onTapDown: (TapDownDetails details) {
-                                  opacity = 0.5;
-                                  setState(() {});
-                                  //print("tapped");
-                                },
-                                onTapUp: (TapUpDetails details) async {
-                                  opacity = 1.0;
-                                  await Future.delayed(
-                                    const Duration(
-                                      milliseconds: 200,
-                                    ),
-                                  );
-                                  setState(() {});
-                                },
-                                child: AnimatedOpacity(
-                                  opacity: opacity,
-                                  duration: const Duration(milliseconds: 200),
-                                  child: const Text(
-                                    'Quên mật khẩu?',
-                                    style: TextStyle(
-                                      color: AppColors.secondaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     Material(
+                      //       color: Colors.transparent,
+                      //       shadowColor: Colors.transparent,
+                      //       child: Ink(
+                      //         child: InkWell(
+                      //           splashColor: AppColors.lightGrey,
+                      //           onTapDown: (TapDownDetails details) {
+                      //             opacity = 0.5;
+                      //             setState(() {});
+                      //             //print("tapped");
+                      //           },
+                      //           onTapUp: (TapUpDetails details) async {
+                      //             opacity = 1.0;
+                      //             await Future.delayed(
+                      //               const Duration(
+                      //                 milliseconds: 200,
+                      //               ),
+                      //             );
+                      //             setState(() {});
+                      //           },
+                      //           child: AnimatedOpacity(
+                      //             opacity: opacity,
+                      //             duration: const Duration(milliseconds: 200),
+                      //             child: const Text(
+                      //               'Quên mật khẩu?',
+                      //               style: TextStyle(
+                      //                 color: AppColors.secondaryColor,
+                      //                 fontWeight: FontWeight.bold,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       const SizedBox(
                         height: 35,
                       ),
                       AppButton(
-                        label: "Đăng nhập",
+                        label: "Log In",
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         onPressed: () {
                           if (_signInFormKey.currentState!.validate())
@@ -226,49 +226,49 @@ class _LoginViewState extends State<LoginView>
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                  left: 10.0, right: 20.0),
-                              child: const Divider(
-                                color: Colors.black45,
-                                height: 36,
-                              ),
-                            ),
-                          ),
-                          const Text(
-                            "HOẶC",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black45,
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                  left: 10.0, right: 20.0),
-                              child: const Divider(
-                                color: Colors.black45,
-                                height: 36,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      AppButtonWithIcon(
-                        label: "Tiếp tục với Google",
-                        trailingWidget: FaIcon(FontAwesomeIcons.google),
-                        // Image.asset(
-                        //   "assets/images/google.png",
-                        //   height: 40,
-                        // ),
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                      ),
+                      // Row(
+                      //   children: <Widget>[
+                      //     Expanded(
+                      //       child: Container(
+                      //         margin: const EdgeInsets.only(
+                      //             left: 10.0, right: 20.0),
+                      //         child: const Divider(
+                      //           color: Colors.black45,
+                      //           height: 36,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     const Text(
+                      //       "HOẶC",
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         color: Colors.black45,
+                      //       ),
+                      //     ),
+                      //     Expanded(
+                      //       child: Container(
+                      //         margin: const EdgeInsets.only(
+                      //             left: 10.0, right: 20.0),
+                      //         child: const Divider(
+                      //           color: Colors.black45,
+                      //           height: 36,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
+                      // AppButtonWithIcon(
+                      //   label: "Tiếp tục với Google",
+                      //   trailingWidget: FaIcon(FontAwesomeIcons.google),
+                      //   // Image.asset(
+                      //   //   "assets/images/google.png",
+                      //   //   height: 40,
+                      //   // ),
+                      //   padding: const EdgeInsets.symmetric(vertical: 20),
+                      // ),
                     ],
                   ),
                 ),

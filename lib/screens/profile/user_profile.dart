@@ -19,19 +19,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
   TextEditingController _birthdateController = TextEditingController();
   Gender? _gender;
   @override
   void initState() {
     final user = context.read<UserProvider>().account;
-    _nameController.text = user.name;
+    _nameController.text = user.customer.name;
     _passwordController.text = user.password;
-    _addressController.text = user.token;
+    _addressController.text = user.customer.address ?? "";
     _emailController.text = user.email;
-    _birthdateController.text = user.birthDate == null
+    _phoneController.text = user.customer.phone ?? "";
+    _birthdateController.text = user.customer.birthday == null
         ? DateFormat('dd-MM-yyyy').format(DateTime.now())
-        : DateFormat('dd-MM-yyyy').format(user.birthDate!);
-    _gender = user.gender == 'male' ? Gender.male : Gender.female;
+        : DateFormat('dd-MM-yyyy').format(user.customer.birthday!);
+    _gender = user.customer.gender == 'male' ? Gender.male : Gender.female;
     super.initState();
   }
 
@@ -99,19 +101,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         },
                         controller: _nameController,
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            labelText: 'Password',
-                            prefixIcon: Icon(Icons.key_outlined)),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                        controller: _passwordController,
-                      ),
+                      // TextFormField(
+                      //   decoration: InputDecoration(
+                      //       labelText: 'Password',
+                      //       prefixIcon: Icon(Icons.key_outlined)),
+                      //   obscureText: true,
+                      //   validator: (value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return 'Please enter your password';
+                      //     }
+                      //     return null;
+                      //   },
+                      //   controller: _passwordController,
+                      // ),
                       TextFormField(
                         decoration: InputDecoration(
                             labelText: 'Address', prefixIcon: Icon(Icons.home)),
@@ -164,6 +166,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           return null;
                         },
                         controller: _emailController,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                            labelText: 'Phone',
+                            prefixIcon: Icon(
+                              Icons.phone_outlined,
+                            )),
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _phoneController,
                       ),
                       SizedBox(height: 25),
                       Row(

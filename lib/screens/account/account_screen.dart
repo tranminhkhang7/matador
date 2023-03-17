@@ -65,7 +65,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   leading:
                       SizedBox(width: 65, height: 65, child: getImageHeader()),
                   title: AppText(
-                    text: user.name,
+                    text: user.customer.name,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -130,6 +130,7 @@ class _AccountScreenState extends State<AccountScreen> {
               height: 20,
               child: SvgPicture.asset(
                 "assets/icons/account_icons/logout_icon.svg",
+                color: AppColors.primaryColor,
               ),
             ),
             Text(

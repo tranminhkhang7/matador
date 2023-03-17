@@ -39,26 +39,72 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         itemBuilder: (context, index) {
                           OrderDetail orderDetail = snapshot.data![index];
                           return Container(
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    orderDetail.price.toString(),
+                            margin: EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          orderDetail.book.imageLink),
+                                    ),
                                   ),
-                                  Text(
-                                    orderDetail.quantity.toString(),
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        orderDetail.book.title,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Author: ${orderDetail.book.author}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Price: ${orderDetail.price}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    orderDetail.book.title,
-                                  ),
-                                  Text(
-                                    orderDetail.book.author,
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           );
-                        })
+                          // Container(
+                          //   child: Center(
+                          //     child: Column(
+                          //       children: [
+                          //         Text(
+                          //           orderDetail.price.toString(),
+                          //         ),
+                          //         Text(
+                          //           orderDetail.quantity.toString(),
+                          //         ),
+                          //         Text(
+                          //           orderDetail.book.title,
+                          //         ),
+                          //         Text(
+                          //           orderDetail.book.author,
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // );
+                        },
+                      )
                     : Container(
                         child: Center(child: const Text('No data')),
                       );

@@ -13,6 +13,8 @@ import 'package:grocery_app/screens/profile/user_profile.dart';
 import 'package:grocery_app/screens/review/review_screen.dart';
 import 'package:grocery_app/screens/search/search_all_screen.dart';
 
+import 'models/comment.dart';
+
 Route<dynamic> generateRoutes(RouteSettings routeSettings) {
   switch (routeSettings.name) {
     case RoutesHandler.BOTTOM_BAR:
@@ -59,8 +61,11 @@ Route<dynamic> generateRoutes(RouteSettings routeSettings) {
         ),
       ));
     case RoutesHandler.COMMENT:
+      var comments = routeSettings.arguments as List<Comment>?;
       return (FadeRoute(
-        page: ReviewScreen(),
+        page: ReviewScreen(
+          comments: comments,
+        ),
       ));
 
     default:

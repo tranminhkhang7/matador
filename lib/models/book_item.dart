@@ -1,5 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
+import 'package:grocery_app/models/comment.dart';
+import 'package:grocery_app/models/genre.dart';
+
 class BookItem {
   final int bookId;
   final String author;
@@ -10,6 +15,9 @@ class BookItem {
   final int quantityLeft;
   final String status;
   final String title;
+  final List<Genre>? genreName;
+  final List<Comment>? comment;
+  final double? rating;
   BookItem({
     required this.bookId,
     required this.author,
@@ -20,6 +28,9 @@ class BookItem {
     required this.quantityLeft,
     required this.status,
     required this.title,
+    this.genreName,
+    this.comment,
+    this.rating,
   });
 
   BookItem copyWith({
@@ -32,6 +43,9 @@ class BookItem {
     int? quantityLeft,
     String? status,
     String? title,
+    List<Genre>? genreName,
+    List<Comment>? comment,
+    double? rating,
   }) {
     return BookItem(
       bookId: bookId ?? this.bookId,
@@ -43,6 +57,9 @@ class BookItem {
       quantityLeft: quantityLeft ?? this.quantityLeft,
       status: status ?? this.status,
       title: title ?? this.title,
+      genreName: genreName ?? this.genreName,
+      comment: comment ?? this.comment,
+      rating: rating ?? this.rating,
     );
   }
 
@@ -57,6 +74,9 @@ class BookItem {
       'quantityLeft': quantityLeft,
       'status': status,
       'title': title,
+      'genreName': genreName?.map((x) => x.toMap()).toList(),
+      'comment': comment?.map((x) => x.toMap()).toList(),
+      'rating': rating,
     };
   }
 
@@ -71,6 +91,13 @@ class BookItem {
       quantityLeft: map['quantityLeft']?.toInt() ?? 0,
       status: map['status'] ?? '',
       title: map['title'] ?? '',
+      genreName: map['genreName'] != null
+          ? List<Genre>.from(map['genreName']?.map((x) => Genre.fromMap(x)))
+          : null,
+      comment: map['comment'] != null
+          ? List<Comment>.from(map['comment']?.map((x) => Comment.fromMap(x)))
+          : null,
+      rating: map['rating']?.toDouble(),
     );
   }
 
@@ -81,7 +108,7 @@ class BookItem {
 
   @override
   String toString() {
-    return 'BookItem(bookId: $bookId, author: $author, description: $description, imageLink: $imageLink, price: $price, publisher: $publisher, quantityLeft: $quantityLeft, status: $status, title: $title)';
+    return 'BookItem(bookId: $bookId, author: $author, description: $description, imageLink: $imageLink, price: $price, publisher: $publisher, quantityLeft: $quantityLeft, status: $status, title: $title, genreName: $genreName, comment: $comment, rating: $rating)';
   }
 
   @override
@@ -97,7 +124,10 @@ class BookItem {
         other.publisher == publisher &&
         other.quantityLeft == quantityLeft &&
         other.status == status &&
-        other.title == title;
+        other.title == title &&
+        listEquals(other.genreName, genreName) &&
+        listEquals(other.comment, comment) &&
+        other.rating == rating;
   }
 
   @override
@@ -110,6 +140,9 @@ class BookItem {
         publisher.hashCode ^
         quantityLeft.hashCode ^
         status.hashCode ^
-        title.hashCode;
+        title.hashCode ^
+        genreName.hashCode ^
+        comment.hashCode ^
+        rating.hashCode;
   }
 }
