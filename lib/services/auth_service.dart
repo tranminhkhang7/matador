@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_app/constants/constant.dart';
 import 'package:grocery_app/constants/routes_constraints.dart';
@@ -18,6 +19,7 @@ import 'package:grocery_app/providers/user_provider.dart';
 import 'package:grocery_app/services/cart_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   Future<void> signUpUser(
@@ -158,6 +160,11 @@ class AuthService {
             var userProvider =
                 Provider.of<UserProvider>(context, listen: false);
             userProvider.setUserFromModel(account);
+
+            // Obtain shared preferences.
+            final prefs = await SharedPreferences.getInstance();
+            // Save an integer value to 'counter' key.
+            await prefs.setString('accToken', account.token);
           },
         );
       }
@@ -260,4 +267,17 @@ class AuthService {
   //     showSnackBar(context, e.toString());
   //   }
   // }
+
+  Future<void> fetchSendingFirebaseToken(
+      BuildContext context, String accountToken, String firebaseToken) async {
+    print("acctoken" + accountToken);
+    print("fbtoken" + firebaseToken);
+    http.Response res =
+        await http.post(Uri.parse('$uriCuaKhoa/customer/fbtoken'), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': "Bearer $accountToken"
+    }, body: {
+      {"firebaseToken": firebaseToken}
+    });
+  }
 }
