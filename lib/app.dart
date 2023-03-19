@@ -6,6 +6,7 @@ import 'package:grocery_app/screens/splash_screen.dart';
 import 'package:grocery_app/services/auth_service.dart';
 import 'package:grocery_app/styles/theme.dart';
 import 'package:grocery_app/widgets/loader.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     requestPermission();
     getToken();
-  initInfor();
+    initInfor();
   }
 
 //request notification permission
@@ -49,14 +50,23 @@ class _MyAppState extends State<MyApp> {
   }
 
   void getToken() async {
-    await FirebaseMessaging.instance.getToken().then((token) {
+    final prefs = await SharedPreferences.getInstance();
+    final String? accToken = prefs.getString('accToken');
+    print("accToken");
+    print(accToken);
+
+    await FirebaseMessaging.instance.getToken().then((firebaseToken) {
       setState(() {
-        mytoken = token;
+        mytoken = firebaseToken;
       });
-      print("tokenne");
-      print(token);
+      print("firebaseToken");
+      print(firebaseToken);
+
+      authService.fetchSendingFirebaseToken(context, accToken!, firebaseToken!);
+
+      // return token;
       // saveToken(token!);
-    });
+    });   
   }
 
   initInfor() {
