@@ -61,10 +61,14 @@ Route<dynamic> generateRoutes(RouteSettings routeSettings) {
         ),
       ));
     case RoutesHandler.COMMENT:
-      var comments = routeSettings.arguments as List<Comment>?;
+      //var comments = routeSettings.arguments as List<Comment>?;
+      var arguments = routeSettings.arguments as Map<String, dynamic>?;
+      var comments = arguments?['comments'] as List<Comment>?;
+      var bookId = arguments?['bookId'] as int;
       return (FadeRoute(
         page: ReviewScreen(
           comments: comments,
+          bookId: bookId,
         ),
       ));
 

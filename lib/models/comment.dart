@@ -5,11 +5,13 @@ class Comment {
   final String content;
   final double rating;
   final DateTime timestamp;
+  final String name;
   Comment({
     this.commentId,
     required this.content,
     required this.rating,
     required this.timestamp,
+    required this.name,
   });
 
   Comment copyWith({
@@ -17,12 +19,14 @@ class Comment {
     String? content,
     double? rating,
     DateTime? timestamp,
+    String? name,
   }) {
     return Comment(
       commentId: commentId ?? this.commentId,
       content: content ?? this.content,
       rating: rating ?? this.rating,
       timestamp: timestamp ?? this.timestamp,
+      name: name ?? this.name,
     );
   }
 
@@ -32,16 +36,18 @@ class Comment {
       'content': content,
       'rating': rating,
       'timestamp': timestamp.millisecondsSinceEpoch,
+      'name': name,
     };
   }
 
   factory Comment.fromMap(Map<String, dynamic> map) {
     return Comment(
-      commentId: map['commentId']?.toInt() ?? 0,
+      commentId: map['commentId']?.toInt(),
       content: map['content'] ?? '',
       rating: map['rating']?.toDouble() ?? 0.0,
       timestamp: DateTime.fromMillisecondsSinceEpoch(
           DateTime.parse(map['timestamp']).millisecondsSinceEpoch),
+      name: map['name'] ?? '',
     );
   }
 
@@ -52,7 +58,7 @@ class Comment {
 
   @override
   String toString() {
-    return 'Comment(commentId: $commentId, content: $content, rating: $rating, timestamp: $timestamp)';
+    return 'Comment(commentId: $commentId, content: $content, rating: $rating, timestamp: $timestamp, name: $name)';
   }
 
   @override
@@ -63,7 +69,8 @@ class Comment {
         other.commentId == commentId &&
         other.content == content &&
         other.rating == rating &&
-        other.timestamp == timestamp;
+        other.timestamp == timestamp &&
+        other.name == name;
   }
 
   @override
@@ -71,6 +78,7 @@ class Comment {
     return commentId.hashCode ^
         content.hashCode ^
         rating.hashCode ^
-        timestamp.hashCode;
+        timestamp.hashCode ^
+        name.hashCode;
   }
 }

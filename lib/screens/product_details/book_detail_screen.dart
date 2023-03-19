@@ -135,7 +135,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   }
 
   void navigateToReviewScreen(List<Comment>? comments) {
-    Navigator.pushNamed(context, RoutesHandler.COMMENT, arguments: comments);
+    Navigator.pushNamed(
+      context,
+      RoutesHandler.COMMENT,
+      arguments: {'comments': comments, 'bookId': book.bookId},
+    );
   }
 
   void addToCart(int bookId, int quantity) async {

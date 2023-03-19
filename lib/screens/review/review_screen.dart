@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:grocery_app/models/book_item.dart';
+import 'package:grocery_app/services/review_services.dart';
 import 'package:intl/intl.dart';
 
 import 'package:grocery_app/common_widgets/app_textfield.dart';
@@ -10,9 +12,11 @@ import '../../models/comment.dart';
 
 class ReviewScreen extends StatefulWidget {
   final List<Comment>? comments;
+  final int bookId;
   const ReviewScreen({
     Key? key,
     this.comments,
+    required this.bookId,
   }) : super(key: key);
 
   @override
@@ -21,6 +25,40 @@ class ReviewScreen extends StatefulWidget {
 
 class _ReviewScreenState extends State<ReviewScreen> {
   TextEditingController commentController = TextEditingController();
+  final ReviewServices reviewServices = ReviewServices();
+  List<Comment> listOfComments = [];
+  final double _initialRating = 4;
+  double _rating = 4;
+  BookItem book = BookItem(
+    bookId: 0,
+    author: '',
+    description: '',
+    imageLink: '',
+    price: 0,
+    publisher: '',
+    quantityLeft: 0,
+    status: '',
+    title: '',
+  );
+  void addComment(String content, double rating, int bookId) async {
+    book = await reviewServices.addComment(
+      context: context,
+      content: content,
+      rating: rating,
+      bookId: bookId,
+    );
+    setState(() {
+      listOfComments = book.comment ?? [];
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listOfComments = widget.comments ?? [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +113,11 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                         Icons.star,
                                         color: AppColors.secondaryColor,
                                       ),
-                                      onRatingUpdate: (rating) {},
+                                      onRatingUpdate: (rating) {
+                                        setState(() {
+                                          _rating = rating;
+                                        });
+                                      },
                                     ),
                                     SizedBox(
                                       height: 30,
@@ -99,9 +141,12 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Changes the tab
-
-                                    Navigator.pop(context); // Closes the dialog
+                                    addComment(
+                                      commentController.text,
+                                      _rating,
+                                      widget.bookId,
+                                    );
+                                    Navigator.pop(context);
                                   },
                                   child: Text('Yes'),
                                 ),
@@ -114,17 +159,17 @@ class _ReviewScreenState extends State<ReviewScreen> {
             ),
           ),
           Expanded(
-            child: widget.comments == null
+            child: listOfComments == null
                 ? SizedBox()
                 : ListView.builder(
-                    itemCount: widget.comments?.length,
+                    itemCount: listOfComments.length,
                     itemBuilder: (context, index) {
                       return CommentWidget(
-                        rating: widget.comments![index].rating,
-                        comment: widget.comments![index].content,
+                        rating: listOfComments[index].rating,
+                        comment: listOfComments[index].content,
                         date: DateFormat('dd/MM/y h:mm a')
-                            .format(widget.comments![index].timestamp),
-                        name: 'Khoa Bui',
+                            .format(listOfComments[index].timestamp),
+                        name: listOfComments[index].name,
                       );
                     }),
           )

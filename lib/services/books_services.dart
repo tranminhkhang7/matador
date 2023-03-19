@@ -21,17 +21,19 @@ class BooksService {
     required String searchQuery,
     int pageNo = 0,
     int pageSize = 6,
+    String sort = "title",
+    String sortType = "ASC",
   }) async {
     List<BookItem> bookList = [];
     try {
       http.Response res = await http.get(
           Uri.parse(
-              '$uriCuaKhoa/book/search?query=$searchQuery&pageNo=$pageNo&pageSize=$pageSize'),
+              '$uriCuaKhoa/book/search?query=&pageNo=$pageNo&pageSize=$pageSize&sort=$sort&sortType=$sortType'),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             //'Authorization': 'Bearer ${userProvider.account.token}',
           });
-
+      log(jsonDecode(res.body)['listBook'][0].toString());
       httpErrorHandle(
         response: res,
         context: context,
@@ -157,6 +159,44 @@ class BooksService {
     }
     return bookList;
   }
+
+  // Future<List<BookItem>> fetchBooksByCondition({
+  //   required BuildContext context,
+  //   required int categoryId,
+  //   int pageNo = 0,
+  //   int pageSize = 5,
+  //   String sort = "title",
+  //   String sortType = "ASC",
+  // }) async {
+  //   List<BookItem> bookList = [];
+  //   try {
+  //     http.Response res = await http.get(
+  //         Uri.parse(
+  //             '$uriCuaKhoa/book/search?query=&pageNo=$pageNo&pageSize=$pageSize&sort=$sort&sortType=$sortType'),
+  //         headers: {
+  //           'Content-Type': 'application/json; charset=UTF-8',
+  //         });
+
+  //     httpErrorHandle(
+  //       response: res,
+  //       context: context,
+  //       onSuccess: () {
+  //         for (int i = 0; i < jsonDecode(res.body).length; i++) {
+  //           bookList.add(
+  //             BookItem.fromJson(
+  //               jsonEncode(
+  //                 jsonDecode(res.body)[i],
+  //               ),
+  //             ),
+  //           );
+  //         }
+  //       },
+  //     );
+  //   } catch (e) {
+  //     showSnackBar(context, e.toString());
+  //   }
+  //   return bookList;
+  // }
 
   Future<List<Genre>> fetchGenres(BuildContext context) async {
     List<Genre> genreList = [];

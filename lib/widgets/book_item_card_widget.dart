@@ -66,14 +66,14 @@ class BookItemCardWidget extends StatelessWidget {
               maxLines: 1,
               textOverflow: TextOverflow.ellipsis,
             ),
-            AppText(
-              text: item.description,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF7C7C7C),
-              maxLines: 1,
-              textOverflow: TextOverflow.ellipsis,
-            ),
+            // AppText(
+            //   text: item.description,
+            //   fontSize: 14,
+            //   fontWeight: FontWeight.w600,
+            //   color: Color(0xFF7C7C7C),
+            //   maxLines: 1,
+            //   textOverflow: TextOverflow.ellipsis,
+            // ),
             SizedBox(
               height: 20,
             ),
@@ -96,9 +96,10 @@ class BookItemCardWidget extends StatelessWidget {
 
   Widget imageWidget() {
     return Container(
+      height: 200,
       child: Image.network(
         item.imageLink,
-        fit: BoxFit.fitHeight,
+        fit: BoxFit.cover,
       ),
     );
   }
@@ -121,4 +122,100 @@ class BookItemCardWidget extends StatelessWidget {
       ),
     );
   }
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: width,
+//       height: height,
+//       decoration: BoxDecoration(
+//         border: Border.all(
+//           color: borderColor,
+//         ),
+//         borderRadius: BorderRadius.circular(
+//           borderRadius,
+//         ),
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(
+//           horizontal: 15,
+//           vertical: 15,
+//         ),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Expanded(
+//               child: Center(
+//                 child: Hero(
+//                   tag: "BookItem: ${generateRandomString(5)}" +
+//                       item.bookId.toString() +
+//                       "-" +
+//                       (heroSuffix ?? ""),
+//                   child: imageWidget(),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(
+//               height: 20,
+//             ),
+//             AppText(
+//               text: item.title,
+//               fontSize: 16,
+//               fontWeight: FontWeight.bold,
+//               maxLines: 1,
+//               textOverflow: TextOverflow.ellipsis,
+//             ),
+//             AppText(
+//               text: item.description,
+//               fontSize: 14,
+//               fontWeight: FontWeight.w600,
+//               color: Color(0xFF7C7C7C),
+//               maxLines: 1,
+//               textOverflow: TextOverflow.ellipsis,
+//             ),
+//             SizedBox(
+//               height: 20,
+//             ),
+//             Row(
+//               children: [
+//                 AppText(
+//                   text: "\$${item.price.toStringAsFixed(2)}",
+//                   fontSize: 18,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//                 Spacer(),
+//                 addWidget()
+//               ],
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget imageWidget() {
+//     return Container(
+//       child: Image.network(
+//         item.imageLink,
+//         fit: BoxFit.fitHeight,
+//       ),
+//     );
+//   }
+
+//   Widget addWidget() {
+//     return Container(
+//       height: 45,
+//       width: 45,
+//       decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(17),
+//           color: AppColors.primaryColor),
+//       child: Center(
+//         child: InkWell(
+//           child: Icon(
+//             Icons.add,
+//             color: Colors.white,
+//             size: 25,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 }

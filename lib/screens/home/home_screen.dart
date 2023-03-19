@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:grocery_app/constants/routes_constraints.dart';
 import 'package:grocery_app/helpers/snackbar.dart';
+import 'package:grocery_app/models/book_item.dart';
 import 'package:grocery_app/models/genre.dart';
 import 'package:grocery_app/models/grocery_item.dart';
 import 'package:grocery_app/providers/user_provider.dart';
@@ -11,6 +13,7 @@ import 'package:grocery_app/screens/product_details/product_details_screen.dart'
 import 'package:grocery_app/services/books_services.dart';
 import 'package:grocery_app/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:grocery_app/widgets/book_item_card_widget.dart';
 import 'package:grocery_app/widgets/grocery_item_card_widget.dart';
 import 'package:grocery_app/widgets/custom_carousel.dart';
 import 'package:grocery_app/widgets/home_categories.dart';
@@ -26,13 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
   BooksService booksService = BooksService();
   // late Completer<List<Genre>> _genresCompleter;
   late Future<List<Genre>> genreList;
-
+  List<BookItem> booksByPrice = [];
   @override
   void initState() {
     super.initState();
     //_genresCompleter = Completer<List<Genre>>();
     //getGenres();
     //genreList = booksService.fetchGenres(context);
+    fetchBooksByPriceDescending();
   }
 
   // getGenres() async {
@@ -56,6 +60,17 @@ class _HomeScreenState extends State<HomeScreen> {
   //     }
   //   }
   // }
+  void fetchBooksByPriceDescending() async {
+    booksByPrice = await booksService.fetchSearchedProducts(
+      context: context,
+      searchQuery: '',
+      pageNo: 0,
+      pageSize: 5,
+      sort: 'price',
+      sortType: 'DESC',
+    );
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,18 +160,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 25,
                   ),
-                  padded(subTitle("Most Rating")),
-                  getHorizontalItemSlider(exclusiveOffers),
+                  padded(subTitle("Attractive Price")),
+                  getHorizontalItemSlider(booksByPrice),
                   SizedBox(
                     height: 15,
                   ),
                   padded(subTitle("Bán Chạy")),
-                  getHorizontalItemSlider(bestSelling),
+                  getHorizontalItemSlider(booksByPrice),
                   SizedBox(
                     height: 15,
                   ),
                   padded(subTitle("New Arrivals")),
-                  getHorizontalItemSlider(groceries),
+                  getHorizontalItemSlider(booksByPrice),
                   SizedBox(
                     height: 15,
                   ),
@@ -176,33 +191,64 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget getHorizontalItemSlider(List<GroceryItem> items) {
+  void navigateToBookDetailScreen(BookItem b) {
+    Navigator.pushNamed(
+      context,
+      RoutesHandler.SINGLE_PRODUCT,
+      arguments: b,
+    );
+  }
+
+  Widget getHorizontalItemSlider(List<BookItem> items) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      height: 250,
+      height: 200,
       child: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: EdgeInsets.symmetric(horizontal: 20),
         itemCount: items.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () {
-              onItemClicked(context, items[index]);
-            },
-            child: GroceryItemCardWidget(
+            onTap: () => navigateToBookDetailScreen(items[index]),
+            child: BookItemCardWidget(
               item: items[index],
-              heroSuffix: "home_screen",
             ),
           );
         },
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(
-            width: 8,
+            width: 20,
           );
         },
       ),
     );
   }
+  // Widget getHorizontalItemSlider(List<GroceryItem> items) {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(vertical: 10),
+  //     height: 250,
+  //     child: ListView.separated(
+  //       padding: EdgeInsets.symmetric(horizontal: 8),
+  //       itemCount: items.length,
+  //       scrollDirection: Axis.horizontal,
+  //       itemBuilder: (context, index) {
+  //         return GestureDetector(
+  //           onTap: () {
+  //             onItemClicked(context, items[index]);
+  //           },
+  //           child: GroceryItemCardWidget(
+  //             item: items[index],
+  //             heroSuffix: "home_screen",
+  //           ),
+  //         );
+  //       },
+  //       separatorBuilder: (BuildContext context, int index) {
+  //         return SizedBox(
+  //           width: 8,
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   void onItemClicked(BuildContext context, GroceryItem groceryItem) {
     Navigator.push(
